@@ -1,6 +1,6 @@
 <template>
     <button class="candy" :class="{'is-active': is_active,'type-1': type == '1', 'type-2': type == '2', 'type-3': type == '3'}" @click="clicked">
-
+        <div class="shadow-candy" :class="{'animated': animated}"></div>
     </button>
 </template>
 
@@ -8,6 +8,7 @@
   export default {
     data () {
         return {
+            animated: false
         }
     },
     mounted: function(){
@@ -16,6 +17,8 @@
     methods: {
         clicked: function(){
             if(this.is_active){
+                this.animated = true;
+                setTimeout(function(){this.animated = false;}.bind(this),500);
                 this.on_clicked(this.type);
             }
         }
@@ -26,7 +29,34 @@
 
 <style scoped>
 
-    .candy {
+    @keyframes clicked-1 {
+        0% {
+            transform: translate(0px, 0px);
+        }
+        100% {
+            transform: translate(70px, 120px);
+        }
+    }
+
+    @keyframes clicked-2 {
+        0% {
+            transform: translate(0px, 0px);
+        }
+        100% {
+            transform: translate(0px, 100px);
+        }
+    }
+
+    @keyframes clicked-3 {
+        0% {
+            transform: translate(0px, 0px);
+        }
+        100% {
+            transform: translate(-70px, 120px);
+        }
+    }
+
+    .candy{
         padding: 0;
         border: 0;
         outline: 0;
@@ -40,7 +70,22 @@
         background-position: bottom center;
         background-size: contain;
         background-repeat: no-repeat;
+        transition-duration: 0.3s;
+        transition-property: transform;
+    }
 
+    .shadow-candy {
+        position: relative;
+        height: 50px;
+        width: 50px;
+        background-position: bottom center;
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    .shadow-candy.animated {
+        animation-duration: 0.5s;
+        animation-timing-function: ease-in-out;
     }
 
     .candy.is-active {
@@ -48,17 +93,45 @@
         cursor: pointer;
     }
 
-    .candy.type-1 {
+    .candy.is-active:hover {
+        opacity: 1;
+        cursor: pointer;
+        transform: scale(1.2);
+    }
+
+    .candy.type-1,.candy.type-1 .shadow-candy {
         background-image: url("../assets/img/candy-1.png");
+    }
+
+    .candy.type-1 .shadow-candy.animated {
+        animation-name: clicked-1;
+    }
+
+    .candy.type-1{
         left: calc(50% - 125px);
     }
-    .candy.type-2 {
+
+
+    .candy.type-2, .candy.type-2 .shadow-candy {
         background-image: url("../assets/img/candy-2.png");
+    }
+    .candy.type-2{
         left: calc(50% - 25px);
     }
-    .candy.type-3 {
+
+    .candy.type-2 .shadow-candy.animated {
+        animation-name: clicked-2;
+    }
+
+    .candy.type-3, .candy.type-3 .shadow-candy {
         background-image: url("../assets/img/candy-3.png");
+    }
+    .candy.type-3 {
         left: calc(50% + 75px);
     }
 
+    .candy.type-3 .shadow-candy.animated {
+
+        animation-name: clicked-3;
+    }
 </style>

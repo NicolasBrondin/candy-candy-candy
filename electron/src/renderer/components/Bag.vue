@@ -1,6 +1,6 @@
 <template>
-    <button class="bag" @click="on_clicked">
-
+    <button class="bag" @click="on_clicked" :class="{'is-showing': is_showing}">
+        <span>Clic sur le sac pour le redonner</span>
     </button>
 </template>
 
@@ -16,7 +16,7 @@
     methods: {
 
     },
-    props: ['on_clicked']
+    props: ['is_showing', 'on_clicked']
   }
 </script>
 
@@ -32,12 +32,27 @@
         height: 150px;
         width: 150px;
         cursor: pointer;
-        bottom: -30px;
         background-position: center center;
         background-size: contain;
         background-repeat: no-repeat;
         background-image: url("../assets/img/bag.png");
         left: calc(50% - 75px);
+        bottom: -150px;
+        transition-duration: 0.5s;
+        transition-property: bottom;
+    }
+
+    .bag.is-showing {
+        bottom: -30px;
+    }
+
+    .bag span {
+        position: absolute;
+        color: white;
+        left: 150px;
+        width: 150px;
+        font-size: 16px;
+        text-shadow: 0px 0px 10px black;
     }
 
 </style>

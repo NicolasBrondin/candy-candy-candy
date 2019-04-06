@@ -26,9 +26,15 @@ import path from 'path';
         100% { transform: rotate(-5deg)}
     }
 
+    @keyframes idle {
+        0% { transform: translateY(-10px)}
+        50% { transform: translateY(0px)}
+        100% { transform: translateY(-10px)}
+    }
+
     .character-container {
         position: absolute;
-        bottom: 30px;
+        bottom: 50px;
         left: calc(50% - 200px);
         height: 400px;
         width: 400px;
@@ -39,20 +45,17 @@ import path from 'path';
 
     .character-container.start {
         left: calc(0% - 400px);
-
         transition-duration: 0s;
     }
 
     .character-container.middle {
         left: calc(50% - 200px);
-
-        transition-duration: 5s;
+        transition-duration: 2s;
     }
 
     .character-container.finish {
         left: 100%;
-
-        transition-duration: 5s;
+        transition-duration: 2s;
     }
 
     .character-sprite {
@@ -62,7 +65,6 @@ import path from 'path';
         background-repeat: no-repeat;
         width: 100%;
         height: 100%;
-        animation-duration: 0.5s;
         animation-iteration-count: infinite;
         transform-origin: bottom center;
     }
@@ -78,6 +80,12 @@ import path from 'path';
         box-sizing: border-box;
         padding: 20px;
         font-size: 20px;
+        animation-iteration-count: infinite;
+    }
+
+    .character-container.talking .character-bubble {
+         animation-duration: 2s;
+        animation-name: idle;
     }
 
     .character-container.talking .character-bubble {
@@ -88,11 +96,12 @@ import path from 'path';
     }
 
     .character-container.talking .character-sprite {
-
-        animation-name: none;
+         animation-duration: 2s;
+        animation-name: idle;
     }
     .character-container:not(.talking) .character-sprite {
 
+        animation-duration: 0.5s;
         animation-name: walking;
     }
 
