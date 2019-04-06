@@ -2,7 +2,7 @@
     <div class="character-container" :class="{'talking': is_talking, 'start': position == 'start', 'middle': position == 'middle', 'finish': position == 'finish'}">
         <div class="character-sprite" :style="'background-image: url('+sprite+');'"></div>
         <div class="character-bubble">
-            {{step.text}}
+            {{displayed_text}}
             <button class="btn-next" @click="next_clicked" v-show="step.button">
                 {{step.button}}
             </button>
@@ -14,6 +14,50 @@
 import path from 'path';
 
   export default {
+      data: function(){
+          return {
+            text_timer: null,
+            displayed_text: "",
+            letter_index:0,
+            speaking_sound: new Audio("static/speaking.mp3")
+          };
+      },
+      watch: {
+          is_talking: function(val){
+              if(val == true){
+                  this.displayed_text = "";
+                  this.letter_index = 0;
+				    this.speaking_sound.play();
+                  this.text_timer = setInterval(function(){
+                      this.letter_index++;
+                      this.displayed_text = this.step.text.substr(0,this.letter_index);
+                      if(this.displayed_text === this.step.text){
+
+                          this.speaking_sound.pause();
+                          this.speaking_sound.currentTime = 0;
+                          clearInterval(this.text_timer);
+                      }
+                  }.bind(this),15);
+              }
+          },
+          step: function(val){
+              if(this.is_talking){
+                  this.displayed_text = "";
+                  this.letter_index = 0;
+					this.speaking_sound.play();
+                  this.text_timer = setInterval(function(){
+                      this.letter_index++;
+                      this.displayed_text = this.step.text.substr(0,this.letter_index);
+                      if(this.displayed_text === this.step.text){
+
+                         this.speaking_sound.pause();
+                         this.speaking_sound.currentTime = 0;
+                          clearInterval(this.text_timer);
+                      }
+                  }.bind(this),15);
+              }
+          }
+      },
     props: ["position", "is_talking", "step", "sprite", "show_bag", "next_clicked"]
   }
 </script>

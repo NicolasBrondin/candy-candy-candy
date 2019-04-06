@@ -1,6 +1,6 @@
 <template>
     <div>
-		<audio autoplay>
+		<audio autoplay loop>
 			<source src="static/background.mp3" type="audio/mpeg">
 		</audio>
         <Popup :day="day_index" :money="money"></Popup>
@@ -226,6 +226,7 @@
 			}.bind(this), 2500);
         },
       show_bag: function(){
+          setTimeout(function(){
           	this.bag_showing = true;
 			  this.game_step = "candy";
 			  this.wait_timer = setTimeout(function(){
@@ -244,6 +245,7 @@
 						}.bind(this),2000);
 				  }
 			  }.bind(this), 10000);
+            }.bind(this),2000);
       },
       candy_clicked: function(type){
 		  	let candy_sound = new Audio("static/candy.mp3");
@@ -290,8 +292,7 @@
             this.refresh_dialog();
 		  }
 		  if(this.character.current_dialog.text != ""){
-					let speaking_sound = new Audio("static/speaking.mp3");
-					speaking_sound.play();
+
 				}
           this.bag_showing = false;
 
