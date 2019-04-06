@@ -1,6 +1,9 @@
 <template>
-    <div class="popup-container">
-        <h1>Jour 1</h1>
+    <div class="popup-container" v-if="showing">
+        <div>
+            <h1>Jour {{day}}</h1>
+            <h2 v-show="day > 1">Argent: {{money}}$</h2>
+        </div>
     </div>
 </template>
 
@@ -8,7 +11,7 @@
   export default {
     data () {
         return {
-
+            showing: false
         }
     },
     mounted: function(){
@@ -17,7 +20,13 @@
     methods: {
 
     },
-    props: []
+    watch: {
+    day: function (val) {
+        this.showing = true;
+        setTimeout(function(){this.showing = false;}.bind(this),3000);
+    }
+    },
+    props: ['day', 'money']
   }
 </script>
 
@@ -50,13 +59,19 @@
         animation-delay: 1s;
     }
 
-    h1 {
+    .popup-container div {
+
+        margin: auto;
+    }
+
+    h1, h2 {
         color: white;
         text-align: center;
         font-size: 80px;
-        margin: auto;
         font-family: Gloria Hallelujah;
     }
-
-
+    h2 {
+        font-size: 40px;
+    }
 </style>
+

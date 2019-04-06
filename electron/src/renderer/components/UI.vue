@@ -34,7 +34,7 @@
     .money {
         position: absolute;
         top: 25px;
-        left: 25px;
+        left: 300px;
         color: white;
         font-size: 42px;
         text-shadow: 0px 0px 10px black;
@@ -43,7 +43,7 @@
 
     .bar-container {
         position: absolute;
-        left: 25px;
+        left: 300px;
         top: 100px;
         transform: rotate(180deg);
     }

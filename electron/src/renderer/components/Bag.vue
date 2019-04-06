@@ -45,7 +45,7 @@
         left: calc(50% - 75px);
         bottom: -150px;
         transition-duration: 0.5s;
-        transition-property: bottom;
+        transition-property: bottom left;
         animation-duration: 3s;
         animation-iteration-count: infinite;
         animation-timing-function: linear;

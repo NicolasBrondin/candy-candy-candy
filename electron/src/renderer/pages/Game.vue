@@ -3,7 +3,7 @@
 		<audio autoplay>
 			<source src="static/background.mp3" type="audio/mpeg">
 		</audio>
-        <Popup></Popup>
+        <Popup :day="day_index" :money="money"></Popup>
         <UI :money="money" :bar_value="points" bar_version="classic"></UI>
         <Character v-if="character" :next_clicked="next_clicked" :position="character.position" :step="character.current_dialog" :is_talking="character.is_talking" :show_bag="show_bag" :sprite="character.sprite"></Character>
         <Candy type="1" v-if="available_candies[1]" :is_active="game_step == 'candy'" :on_clicked="candy_clicked"></Candy>
@@ -35,7 +35,8 @@
             points: 0,
             game_step: "walking",
             available_candies: {1:true},
-            characters: [{
+            characters: {
+                1: [{
                 sprite:  SpriteCharacter1,
                 dialogs: {
                     start: [
@@ -134,23 +135,78 @@
                 current_dialog_index: 0,
                 current_dialog_type: "start"
             }],
+            2: [{
+                sprite:  SpriteCharacter2,
+                dialogs: {
+                    start: [
+                        {
+                            text: "Hey, j'ai trouvé un bonbon par terre !",
+                            button: "Récupérer le bonbon"
+                        },
+                        {
+                            text: "Le voilà ",
+                            action: "unlock_candy",
+                            action_data: "2",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Je veux mhmmh bonbons oranges",
+                            action: "show_bag"
+                        }
+                    ],
+                    end: [
+                        {
+                            text: "Hmhmmh super, merci !",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "finish_character"
+                        }
+                    ],
+                    bad: [
+                        {
+                            text: "Hmhmhm sale fils de mhhmhm !",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "finish_character"
+                        }
+					],
+					wait: [
+						{
+							text: "J'en ai marre d'attendre, je me casse !"
+						}
+					]
+                },
+                money: 10,
+                points: 20,
+                expected_bag: {1:0,2:1,3:0},
+                current_bag: {1:0,2:0,3:0},
+                position: "start",
+                is_talking: false,
+                current_dialog: {},
+                current_dialog_index: 0,
+                current_dialog_type: "start"
+            }]},
             character: null,
-			character_index: 0,
+            character_index: 0,
+            day_index: 0,
 			wait_timer : null
         };
     },
     mounted: function(){
+        this.day_index = 1;
         setTimeout(function(){
-            this.character = this.characters[0];
-            this.refresh_dialog();
             setTimeout(function(){this.points = 10}.bind(this),1000);
             this.load_character();
         }.bind(this), 2000);
     },
     methods: {
         load_character: function(){
+			this.character = this.characters[this.day_index][this.character_index];
             this.character.is_talking = false;
-			this.character = this.characters[this.character_index];
 			this.character.position = "start";
 			let walking_sound = new Audio("static/walking.mp3");
 			this.character.is_talking = false;
@@ -203,7 +259,11 @@
 				walking_sound.pause();
 			}.bind(this), 2000);
           	setTimeout(function(){
-              	this.character_index++;
+                  this.character_index++;
+                  if(!this.characters[this.day_index][this.character_index]){
+                      this.character_index = 0;
+                      this.day_index++;
+                  }
                 this.load_character();
           	}.bind(this),2000)
       },
