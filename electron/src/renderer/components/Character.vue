@@ -2,9 +2,9 @@
     <div class="character-container" :class="{'talking': is_talking, 'start': position == 'start', 'middle': position == 'middle', 'finish': position == 'finish'}">
         <div class="character-sprite" :style="'background-image: url('+sprite+');'"></div>
         <div class="character-bubble">
-            {{steps[current_step].text}}
-            <button class="btn-next" @click="next_clicked" v-show="steps[current_step].button">
-                {{steps[current_step].button}}
+            {{step.text}}
+            <button class="btn-next" @click="next_clicked" v-show="step.button">
+                {{step.button}}
             </button>
         </div>
     </div>
@@ -14,7 +14,7 @@
 import path from 'path';
 
   export default {
-    props: ["position", "is_talking", "current_step", "sprite", "steps", "show_bag", "next_clicked"]
+    props: ["position", "is_talking", "step", "sprite", "show_bag", "next_clicked"]
   }
 </script>
 
