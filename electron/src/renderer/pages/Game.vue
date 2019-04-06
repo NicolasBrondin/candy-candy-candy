@@ -63,7 +63,12 @@
                             text: "",
                             action: "finish_character"
                         }
-                    ]
+					],
+					wait: [
+						{
+							text: "J'en ai marre d'attendre, je me casse !"
+						}
+					]
                 },
                 money: 10,
                 points: 20,
@@ -107,7 +112,7 @@
                             text: "",
                             action: "finish_character"
                         }
-                    ]
+					]
                 },
                 money: 10,
                 points: 20,
@@ -120,7 +125,8 @@
                 current_dialog_type: "start"
             }],
             character: null,
-            character_index: 0
+			character_index: 0,
+			wait_timer : null
         };
     },
     mounted: function(){
@@ -152,7 +158,23 @@
         },
       show_bag: function(){
           	this.bag_showing = true;
-          	this.game_step = "candy";
+			  this.game_step = "candy";
+			  this.wait_timer = setTimeout(function(){
+				  if(this.character.dialogs.wait){
+					  this.game_step = "dialog";
+					  this.character.current_dialog_type = "wait";
+					  this.character.current_dialog_index = 0;
+					  this.refresh_dialog();
+						if(this.character.current_dialog.text != ""){
+							let speaking_sound = new Audio("static/speaking.mp3");
+							speaking_sound.play();
+						}
+						this.bag_showing = false;
+						setTimeout(function(){
+							this.finish_character();
+						}.bind(this),2000);
+				  }
+			  }.bind(this), 5000);
       },
       candy_clicked: function(type){
 		  	let candy_sound = new Audio("static/candy.mp3");
@@ -175,6 +197,7 @@
       },
       bag_clicked: function(){
 		  this.game_step = "dialog";
+		  clearTimeout(this.wait_timer);
 		  console.log(JSON.stringify(this.character.expected_bag));
 		  console.log(JSON.stringify(this.character.current_bag));
           if(JSON.stringify(this.character.expected_bag) == JSON.stringify(this.character.current_bag)){
