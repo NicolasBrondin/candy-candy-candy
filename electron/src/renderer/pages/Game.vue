@@ -1,10 +1,10 @@
 <template>
     <div>
-		<!--<audio autoplay>
+		<audio autoplay>
 			<source src="static/background.mp3" type="audio/mpeg">
-		</audio>-->
-        <UI :money="money" :bar_value="bar_value" bar_version="classic"></UI>
-        <Character :next_clicked="next_clicked" :position="character.position" :step="character.current_dialog" :is_talking="character.is_talking" :show_bag="show_bag" :sprite="character.sprite"></Character>
+		</audio>
+        <UI :money="money" :bar_value="points" bar_version="classic"></UI>
+        <Character v-if="character" :next_clicked="next_clicked" :position="character.position" :step="character.current_dialog" :is_talking="character.is_talking" :show_bag="show_bag" :sprite="character.sprite"></Character>
         <Candy type="1" :is_active="game_step == 'candy'" :on_clicked="candy_clicked"></Candy>
         <Candy type="2" :is_active="game_step == 'candy'" :on_clicked="candy_clicked"></Candy>
         <Candy type="3" :is_active="game_step == 'candy'" :on_clicked="candy_clicked"></Candy>
@@ -29,7 +29,7 @@
         return {
             bag_showing : false,
             money: 0,
-            bar_value: 0,
+            points: 0,
             game_step: "walking",
             characters: [{
                 sprite:  SpriteCharacter1,
@@ -40,14 +40,14 @@
                             button: "Suivant"
                         },
                         {
-                            text: "Je veux deux bonbons rouges",
+                            text: "Je veux DEUX bonbons rouges, et vite.",
                             action: "show_bag"
                         }
                     ],
                     end: [
                         {
-                            text: "Merci ! Pile ce que j'avais commandé !",
-                            button: "Suivant"
+                            text: "Efficace, merci !",
+                            button: "A bientôt"
                         },
                         {
                             text: "",
@@ -56,7 +56,7 @@
                     ],
                     bad: [
                         {
-                            text: "Quoi ? Mais c'est pas du tout ça ! T'es nul !",
+                            text: "J'ai pas commandé ça, voleur !!",
                             button: "Suivant"
                         },
                         {
@@ -66,7 +66,7 @@
                     ]
                 },
                 money: 10,
-                points: 5,
+                points: 20,
                 expected_bag: {1:2,2:0,3:0},
                 current_bag: {1:0,2:0,3:0},
                 position: "start",
@@ -80,17 +80,17 @@
                 dialogs: {
                     start: [
                         {
-                            text: "Mmmhmhmm mhmhm mhm",
+                            text: "Mmmhmhmm mhmhm bonjour",
                             button: "Suivant"
                         },
                         {
-                            text: "Je veux mhmmh bonbons bleus",
+                            text: "Je veux mhmmh bonbons oranges",
                             action: "show_bag"
                         }
                     ],
                     end: [
                         {
-                            text: "Merci ! Pile ce que j'avais commandé !",
+                            text: "Hmhmmh super, merci !",
                             button: "Suivant"
                         },
                         {
@@ -100,7 +100,7 @@
                     ],
                     bad: [
                         {
-                            text: "Quoi ? Mais c'est pas du tout ça ! T'es nul !",
+                            text: "Hmhmhm sale fils de mhhmhm !",
                             button: "Suivant"
                         },
                         {
@@ -110,8 +110,8 @@
                     ]
                 },
                 money: 10,
-                points: 5,
-                expected_bag: {1:2,2:0,3:0},
+                points: 20,
+                expected_bag: {1:0,2:1,3:0},
                 current_bag: {1:0,2:0,3:0},
                 position: "start",
                 is_talking: false,
@@ -126,7 +126,7 @@
     mounted: function(){
         this.character = this.characters[0];
         this.refresh_dialog();
-        setTimeout(function(){this.bar_value = 10}.bind(this),1000);
+        setTimeout(function(){this.points = 10}.bind(this),1000);
         this.load_character();
     },
     methods: {
@@ -134,52 +134,84 @@
             this.character.is_talking = false;
 			this.character = this.characters[this.character_index];
 			this.character.position = "start";
+			let walking_sound = new Audio("static/walking.mp3");
 			this.character.is_talking = false;
 			this.refresh_dialog();
-            setTimeout(function(){ this.character.position = "middle";}.bind(this), 500);
-            setTimeout(function(){ this.character.is_talking = true;}.bind(this), 2500);
+            setTimeout(function(){
+				this.character.position = "middle";
+				walking_sound.play();
+			}.bind(this), 500);
+            setTimeout(function(){
+				this.character.is_talking = true;
+				walking_sound.pause();
+				if(this.character.current_dialog.text != ""){
+					let speaking_sound = new Audio("static/speaking.mp3");
+					speaking_sound.play();
+				}
+			}.bind(this), 2500);
         },
       show_bag: function(){
           	this.bag_showing = true;
           	this.game_step = "candy";
       },
       candy_clicked: function(type){
+		  	let candy_sound = new Audio("static/candy.mp3");
+			candy_sound.play();
           	this.character.current_bag[type]++;
       },
       finish_character: function(){
+
 			  this.character.position = "finish";
 			  this.character.is_talking = false;
+			  let walking_sound = new Audio("static/walking.mp3");
+			  walking_sound.play();
+			  setTimeout(function(){
+				walking_sound.pause();
+			}.bind(this), 2000);
           	setTimeout(function(){
               	this.character_index++;
                 this.load_character();
           	}.bind(this),2000)
       },
       bag_clicked: function(){
-          this.game_step = "dialog";
+		  this.game_step = "dialog";
+		  console.log(JSON.stringify(this.character.expected_bag));
+		  console.log(JSON.stringify(this.character.current_bag));
           if(JSON.stringify(this.character.expected_bag) == JSON.stringify(this.character.current_bag)){
             this.money += this.character.money;
             this.points += this.character.points;
             this.character.current_dialog_type = "end";
-            this.character.current_dialog_index = 0;
+			this.character.current_dialog_index = 0;
+			let money_sound = new Audio("static/money.mp3");
+			money_sound.play();
             this.refresh_dialog();
           } else {
             this.points += this.character.points;
             this.character.current_dialog_type = "bad";
             this.character.current_dialog_index = 0;
             this.refresh_dialog();
-          }
+		  }
+		  if(this.character.current_dialog.text != ""){
+					let speaking_sound = new Audio("static/speaking.mp3");
+					speaking_sound.play();
+				}
           this.bag_showing = false;
 
       },
        next_clicked: function (){
             this.character.current_dialog_index++;
-            this.refresh_dialog();
+			this.refresh_dialog();
+			if(this.character.current_dialog.text != ""){
+				let speaking_sound = new Audio("static/speaking.mp3");
+				speaking_sound.play();
+			}
         },
         refresh_dialog: function(){
             this.character.current_dialog = this.character.dialogs[this.character.current_dialog_type][this.character.current_dialog_index];
             if(this.character.current_dialog.action){
                 this[this.character.current_dialog.action]();
-            }
+			}
+
         }
     }
   }
