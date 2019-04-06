@@ -26,7 +26,7 @@
 
   export default {
     name: 'landing-page',
-    components: { UI, Character, Candy, Bag },
+    components: { UI, Character, Candy, Bag , Popup},
     data: function(){
         return {
             bag_showing : false,
@@ -132,10 +132,12 @@
         };
     },
     mounted: function(){
-        this.character = this.characters[0];
-        this.refresh_dialog();
-        setTimeout(function(){this.points = 10}.bind(this),1000);
-        this.load_character();
+        setTimeout(function(){
+            this.character = this.characters[0];
+            this.refresh_dialog();
+            setTimeout(function(){this.points = 10}.bind(this),1000);
+            this.load_character();
+        }.bind(this), 2000);
     },
     methods: {
         load_character: function(){
@@ -246,6 +248,7 @@
 
 <style>
   @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+  @import url('https://fonts.googleapis.com/css?family=Gloria+Hallelujah');
 
   * {
     box-sizing: border-box;

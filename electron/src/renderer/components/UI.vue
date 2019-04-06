@@ -38,6 +38,7 @@
         color: white;
         font-size: 42px;
         text-shadow: 0px 0px 10px black;
+        font-family: Gloria Hallelujah;
     }
 
     .bar-container {

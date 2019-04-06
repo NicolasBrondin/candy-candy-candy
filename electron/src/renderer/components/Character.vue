@@ -82,6 +82,7 @@ import path from 'path';
         padding: 20px;
         font-size: 20px;
         animation-iteration-count: infinite;
+
     }
 
     .character-container.talking .character-bubble {
@@ -131,5 +132,6 @@ import path from 'path';
         background: #8d37ee;
         color: white;
         cursor: pointer;
+        font-family: Source Sans Pro, serif;
     }
 </style>
