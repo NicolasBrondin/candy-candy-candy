@@ -188,7 +188,9 @@
           } else {
             this.points += this.character.points;
             this.character.current_dialog_type = "bad";
-            this.character.current_dialog_index = 0;
+			this.character.current_dialog_index = 0;
+			let wrong_sound = new Audio("static/wrong.mp3");
+			wrong_sound.play();
             this.refresh_dialog();
 		  }
 		  if(this.character.current_dialog.text != ""){

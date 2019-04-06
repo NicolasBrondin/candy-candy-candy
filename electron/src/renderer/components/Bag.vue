@@ -1,6 +1,6 @@
 <template>
     <button class="bag" @click="on_clicked" :class="{'is-showing': is_showing}">
-        <span>Clic sur le sac pour le redonner</span>
+        <span>Clic pour terminer la commande</span>
     </button>
 </template>
 
@@ -22,6 +22,12 @@
 
 <style scoped>
 
+    @keyframes glowing {
+        0% { transform: scale(1.1)}
+        50% { transform: scale(1)}
+        100% { transform: scale(1.1)}
+    }
+
     .bag {
         padding: 0;
         border: 0;
@@ -40,6 +46,9 @@
         bottom: -150px;
         transition-duration: 0.5s;
         transition-property: bottom;
+        animation-duration: 3s;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
     }
 
     .bag.is-showing {
@@ -50,9 +59,20 @@
         position: absolute;
         color: white;
         left: 150px;
-        width: 150px;
-        font-size: 16px;
+        bottom: 50px;
+        width: 170px;
+        font-size: 18px;
+        font-weight: bold;
         text-shadow: 0px 0px 10px black;
+        text-align: center;
+    }
+
+    .bag:not(:hover) {
+        animation-name: glowing;
+    }
+
+    .bag:hover {
+        transform: scale(1.2);
     }
 
 </style>

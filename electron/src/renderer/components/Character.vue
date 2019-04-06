@@ -120,11 +120,15 @@ import path from 'path';
     }
 
     .btn-next {
-        padding: 5px 10px;
+        position: absolute;
+        top: 80px;
+        right: 10px;
+        padding: 10px 15px;
         outline: 0;
-        border-radius: 5px;
+        border-radius: 15px;
         border: 0;
         background: #8d37ee;
         color: white;
+        cursor: pointer;
     }
 </style>
