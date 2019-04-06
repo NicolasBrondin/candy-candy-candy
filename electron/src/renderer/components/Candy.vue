@@ -1,5 +1,5 @@
 <template>
-    <button class="candy" :class="{'is-active': is_active,'type-1': type == '1', 'type-2': type == '2', 'type-3': type == '3'}" @click="clicked">
+    <button class="candy" :class="{'is-active': is_active, 'type-1': type == '1', 'type-2': type == '2', 'type-3': type == '3'}" @click="clicked">
         <div class="shadow-candy" :class="{'animated': animated}"></div>
     </button>
 </template>
@@ -31,10 +31,10 @@
 
     @keyframes clicked-1 {
         0% {
-            transform: translate(0px, 0px);
+            transform: translate(0px, 0px) scale(1.0);
         }
         100% {
-            transform: translate(180px, -120px);
+            transform: translate(260px, -140px) scale(0.5);
         }
     }
 
@@ -43,7 +43,7 @@
             transform: translate(0px, 0px);
         }
         100% {
-            transform: translate(80px, -100px);
+            transform: translate(120px, -100px) scale(0.5);
         }
     }
 
@@ -52,7 +52,7 @@
             transform: translate(0px, 0px);
         }
         100% {
-            transform: translate(0px, -120px);
+            transform: translate(0px, -120px) scale(0.5);
         }
     }
 
