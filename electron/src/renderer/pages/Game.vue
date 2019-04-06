@@ -219,10 +219,10 @@
             setTimeout(function(){
 				this.character.is_talking = true;
 				walking_sound.pause();
-				if(this.character.current_dialog.text != ""){
+				/*if(this.character.current_dialog.text != ""){
 					let speaking_sound = new Audio("static/speaking.mp3");
 					speaking_sound.play();
-				}
+				}*/
 			}.bind(this), 2500);
         },
       show_bag: function(){
@@ -235,10 +235,10 @@
 					  this.character.current_dialog_type = "wait";
 					  this.character.current_dialog_index = 0;
 					  this.refresh_dialog();
-						if(this.character.current_dialog.text != ""){
+						/*if(this.character.current_dialog.text != ""){
 							let speaking_sound = new Audio("static/speaking.mp3");
 							speaking_sound.play();
-						}
+						}*/
 						this.bag_showing = false;
 						setTimeout(function(){
 							this.finish_character();
@@ -300,10 +300,10 @@
        next_clicked: function (){
             this.character.current_dialog_index++;
 			this.refresh_dialog();
-			if(this.character.current_dialog.text != ""){
+			/*if(this.character.current_dialog.text != ""){
 				let speaking_sound = new Audio("static/speaking.mp3");
 				speaking_sound.play();
-			}
+			}*/
         },
         unlock_candy: function(id, price){
             if(price < this.money){

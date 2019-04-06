@@ -32,9 +32,7 @@ import path from 'path';
                       this.letter_index++;
                       this.displayed_text = this.step.text.substr(0,this.letter_index);
                       if(this.displayed_text === this.step.text){
-
                           this.speaking_sound.pause();
-                          this.speaking_sound.currentTime = 0;
                           clearInterval(this.text_timer);
                       }
                   }.bind(this),15);
