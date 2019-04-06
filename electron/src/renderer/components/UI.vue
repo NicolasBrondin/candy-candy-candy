@@ -1,11 +1,11 @@
 <template>
     <div>
         <div class="money">
-            0$
+            {{money}}$
         </div>
-        <div class="bar-container">
+        <div class="bar-container" :class="{'classic': bar_version == 'classic'}">
             <div class="outer-bar">
-                <div class="inner-bar">
+                <div class="inner-bar" :style="'height:'+bar_value+'%'">
 
                 </div>
             </div>
@@ -25,7 +25,8 @@
     },
     methods: {
 
-    }
+    },
+    props: ["money", "bar_value", "bar_version"]
   }
 </script>
 
@@ -40,7 +41,7 @@
     }
 
     .bar-container {
-         position: absolute;
+        position: absolute;
         left: 25px;
         top: 100px;
         transform: rotate(180deg);
@@ -57,8 +58,13 @@
     }
 
     .inner-bar {
-        background: #ee25ec;
         width: 100%;
-        height: 10%;
+        transition-duration: 0.5s;
+        transition-property: height;
     }
+
+    .bar-container.classic .inner-bar {
+        background: #ee25ec;
+    }
+
 </style>

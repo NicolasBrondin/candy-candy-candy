@@ -1,50 +1,20 @@
 <template>
     <div class="character-container" :class="{'talking': is_talking, 'start': position == 'start', 'middle': position == 'middle', 'finish': position == 'finish'}">
-        <div class="character-sprite">
-
-        </div>
+        <div class="character-sprite" :style="'background-image: url('+sprite+');'"></div>
         <div class="character-bubble">
             {{steps[current_step].text}}
-            <button class="btn-next" @click="next()" v-show="current_step == 0">Next</button>
+            <button class="btn-next" @click="next_clicked" v-show="steps[current_step].button">
+                {{steps[current_step].button}}
+            </button>
         </div>
     </div>
 </template>
 
 <script>
+import path from 'path';
+
   export default {
-    data () {
-        return {
-            position: "start",
-            is_talking: true,
-            current_step: 0,
-            steps: [
-                {text: "Salut, je m'appelle Nick, Nick Tahmer !"},
-                {text: "Je veux deux bonbons rouges"}
-            ]
-
-        }
-    },
-    mounted: function(){
-        setTimeout(function(){ this.position = "start";this.is_talking = false;}.bind(this), 0);
-        setTimeout(function(){ this.position = "middle";}.bind(this), 2000);
-        setTimeout(function(){ this.is_talking = true;}.bind(this), 7000);
-
-    },
-    methods: {
-        next: function (){
-            if(this.current_step == 0){
-                this.current_step++;
-                this.show_bag(true);
-            } else {
-                this.position = "finish";
-                this.is_talking = false;
-                this.current_step = 0;
-                this.show_bag(false);
-            }
-
-        }
-    },
-    props: ["show_bag"]
+    props: ["position", "is_talking", "current_step", "sprite", "steps", "show_bag", "next_clicked"]
   }
 </script>
 
@@ -87,7 +57,6 @@
 
     .character-sprite {
         position: relative;
-        background-image: url("../assets/img/character.png");
         background-position: bottom center;
         background-size: contain;
         background-repeat: no-repeat;

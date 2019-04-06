@@ -1,5 +1,5 @@
 <template>
-    <button class="candy" :class="{'type-1': type == '1', 'type-2': type == '2', 'type-3': type == '3'}">
+    <button class="candy" :class="{'is-active': is_active,'type-1': type == '1', 'type-2': type == '2', 'type-3': type == '3'}" @click="clicked">
 
     </button>
 </template>
@@ -14,9 +14,13 @@
 
     },
     methods: {
-
+        clicked: function(){
+            if(this.is_active){
+                this.on_clicked(this.type);
+            }
+        }
     },
-    props: ['type']
+    props: ['type', 'is_active', 'on_clicked']
   }
 </script>
 
@@ -31,12 +35,17 @@
         position: absolute;
         height: 50px;
         width: 50px;
-        cursor: pointer;
         bottom: 200px;
+        opacity: 0.5;
         background-position: bottom center;
         background-size: contain;
         background-repeat: no-repeat;
 
+    }
+
+    .candy.is-active {
+        opacity: 1;
+        cursor: pointer;
     }
 
     .candy.type-1 {
