@@ -70,12 +70,13 @@ import path from 'path';
     }
 
     .character-bubble {
+        z-index: 5;
         position: absolute;
         background: white;
         width: 300px;
         height: 125px;
-        top: -100px;
-        right: -200px;
+        top: -150px;
+        right: -100px;
         border-radius: 25px;
         box-sizing: border-box;
         padding: 20px;

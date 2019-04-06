@@ -1,6 +1,6 @@
 <template>
     <button class="bag" @click="on_clicked" :class="{'is-showing': is_showing}">
-        <span>Clic pour terminer la commande</span>
+        <span>Clique pour terminer la commande</span>
     </button>
 </template>
 
@@ -52,7 +52,8 @@
     }
 
     .bag.is-showing {
-        bottom: -30px;
+        bottom: 210px;
+        left: calc(50% + 100px);
     }
 
     .bag span {
@@ -60,7 +61,7 @@
         color: white;
         left: 150px;
         bottom: 50px;
-        width: 170px;
+        width: 200px;
         font-size: 18px;
         font-weight: bold;
         text-shadow: 0px 0px 10px black;

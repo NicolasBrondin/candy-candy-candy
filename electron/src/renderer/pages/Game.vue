@@ -3,6 +3,7 @@
 		<audio autoplay>
 			<source src="static/background.mp3" type="audio/mpeg">
 		</audio>
+        <Popup></Popup>
         <UI :money="money" :bar_value="points" bar_version="classic"></UI>
         <Character v-if="character" :next_clicked="next_clicked" :position="character.position" :step="character.current_dialog" :is_talking="character.is_talking" :show_bag="show_bag" :sprite="character.sprite"></Character>
         <Candy type="1" :is_active="game_step == 'candy'" :on_clicked="candy_clicked"></Candy>
@@ -14,6 +15,7 @@
 </template>
 
 <script>
+  import Popup from '../components/Popup'
   import UI from '../components/UI'
   import Character from '../components/Character'
   import Bag from '../components/Bag'
@@ -63,11 +65,6 @@
                             text: "",
                             action: "finish_character"
                         }
-					],
-					wait: [
-						{
-							text: "J'en ai marre d'attendre, je me casse !"
-						}
 					]
                 },
                 money: 10,
@@ -112,6 +109,11 @@
                             text: "",
                             action: "finish_character"
                         }
+					],
+					wait: [
+						{
+							text: "J'en ai marre d'attendre, je me casse !"
+						}
 					]
                 },
                 money: 10,
@@ -174,7 +176,7 @@
 							this.finish_character();
 						}.bind(this),2000);
 				  }
-			  }.bind(this), 5000);
+			  }.bind(this), 10000);
       },
       candy_clicked: function(type){
 		  	let candy_sound = new Audio("static/candy.mp3");
@@ -262,15 +264,16 @@
     }
 
     .stand {
-        position: absolute;
-        bottom: 30px;
-        left: calc(50% - 200px);
-        background-image: url("../assets/img/stand.png");
-        background-position: bottom center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        height: 200px;
-        width: 400px;
-    }
+            position: absolute;
+    bottom: 0;
+    left: calc(50% - 375px);
+    background-image: url(../assets/img/stand.png);
+    background-position: bottom center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 755px;
+    width: 750px;
+}
+
 
 </style>

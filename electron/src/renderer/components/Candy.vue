@@ -34,7 +34,7 @@
             transform: translate(0px, 0px);
         }
         100% {
-            transform: translate(70px, 120px);
+            transform: translate(180px, -120px);
         }
     }
 
@@ -43,7 +43,7 @@
             transform: translate(0px, 0px);
         }
         100% {
-            transform: translate(0px, 100px);
+            transform: translate(80px, -100px);
         }
     }
 
@@ -52,7 +52,7 @@
             transform: translate(0px, 0px);
         }
         100% {
-            transform: translate(-70px, 120px);
+            transform: translate(0px, -120px);
         }
     }
 
@@ -63,9 +63,9 @@
         background: none;
         z-index: 2;
         position: absolute;
-        height: 50px;
-        width: 50px;
-        bottom: 200px;
+        height: 100px;
+        width: 100px;
+        bottom: 100px;
         opacity: 0.5;
         background-position: bottom center;
         background-size: contain;
@@ -76,8 +76,8 @@
 
     .shadow-candy {
         position: relative;
-        height: 50px;
-        width: 50px;
+        height: 100px;
+        width: 100px;
         background-position: bottom center;
         background-size: contain;
         background-repeat: no-repeat;
@@ -96,7 +96,7 @@
     .candy.is-active:hover {
         opacity: 1;
         cursor: pointer;
-        transform: scale(1.2);
+        transform: scale(1.1);
     }
 
     .candy.type-1,.candy.type-1 .shadow-candy {
@@ -108,7 +108,7 @@
     }
 
     .candy.type-1{
-        left: calc(50% - 125px);
+        left: calc(50% - 200px);
     }
 
 
@@ -116,7 +116,7 @@
         background-image: url("../assets/img/candy-2.png");
     }
     .candy.type-2{
-        left: calc(50% - 25px);
+        left: calc(50% - 50px);
     }
 
     .candy.type-2 .shadow-candy.animated {
@@ -127,7 +127,7 @@
         background-image: url("../assets/img/candy-3.png");
     }
     .candy.type-3 {
-        left: calc(50% + 75px);
+        left: calc(50% + 100px);
     }
 
     .candy.type-3 .shadow-candy.animated {
