@@ -28,6 +28,27 @@
         100% { transform: scale(1.05)}
     }
 
+     @keyframes jump {
+        0% {
+            transform: translate(0px, 0px);
+        }
+        40% {
+            transform: translate(0px, 0px);
+        }
+        50% {
+            transform: translate(5px, 0px);
+        }
+        55% {
+            transform: translate(-5px, 0px);
+        }
+        60% {
+            transform: translate(0px, 0px);
+        }
+        100% {
+            transform: translate(0px, 0px);
+        }
+    }
+
     .bag {
         padding: 0;
         border: 0;
@@ -35,28 +56,30 @@
         background: none;
         z-index: 2;
         position: absolute;
-        height: 150px;
-        width: 150px;
+        height: 200px;
+        width: 200px;
         cursor: pointer;
         background-position: center center;
         background-size: contain;
         background-repeat: no-repeat;
         background-image: url("../assets/img/bag.png");
         left: calc(50% - 75px);
-        bottom: -150px;
+        bottom: -200px;
         transition-duration: 0.5s;
         transition-property: bottom left;
+
+        font-family: Gloria Hallelujah;
+        transform-origin: center bottom;
+        animation-name: jump;
         animation-duration: 3s;
         animation-iteration-count: infinite;
         animation-timing-function: linear;
-        font-family: Gloria Hallelujah;
-        transform-origin: center bottom;
 
     }
 
     .bag.is-showing {
         bottom: 210px;
-        left: calc(50% + 100px);
+        left: calc(50% + 90px);
     }
 
     .bag span {
@@ -73,7 +96,7 @@
     }
 
     .bag:not(:hover) {
-        animation-name: glowing;
+        //animation-name: glowing;
     }
 
     .bag:hover {

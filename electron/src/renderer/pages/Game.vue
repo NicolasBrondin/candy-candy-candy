@@ -6,9 +6,10 @@
         <Popup :day="day_index" :money="money"></Popup>
         <UI :money="money" :bar_value="points" bar_version="classic"></UI>
         <Character v-if="character" :next_clicked="next_clicked" :position="character.position" :step="character.current_dialog" :is_talking="character.is_talking" :show_bag="show_bag" :sprite="character.sprite"></Character>
-        <Candy type="1" v-if="available_candies[1]" :is_active="game_step == 'candy'" :on_clicked="candy_clicked"></Candy>
-        <Candy type="2" v-if="available_candies[2]" :is_active="game_step == 'candy'" :on_clicked="candy_clicked"></Candy>
-        <Candy type="3" v-if="available_candies[3]" :is_active="game_step == 'candy'" :on_clicked="candy_clicked"></Candy>
+        <Candy type="1" :is_available="available_candies[1]" :on_unlock="unlock_candy" price="5" :is_active="game_step == 'candy'" :on_clicked="candy_clicked"></Candy>
+        <Candy type="2" :is_available="available_candies[2]" :on_unlock="unlock_candy" price="15" :is_active="game_step == 'candy'" :on_clicked="candy_clicked"></Candy>
+        <Candy type="3" :is_available="available_candies[3]" :on_unlock="unlock_candy" price="50" :is_active="game_step == 'candy'" :on_clicked="candy_clicked"></Candy>
+        <Candy type="4" :is_available="available_candies[4]" :on_unlock="unlock_candy" price="100" :is_active="game_step == 'candy'" :on_clicked="candy_clicked"></Candy>
         <div class="stand"></div>
         <Bag :is_showing="bag_showing" :on_clicked="bag_clicked"></Bag>
     </div>
@@ -31,7 +32,7 @@
     data: function(){
         return {
             bag_showing : false,
-            money: 0,
+            money: 500,
             points: 0,
             game_step: "walking",
             available_candies: {1:true},
@@ -303,8 +304,11 @@
 				speaking_sound.play();
 			}
         },
-        unlock_candy: function(id){
-            Vue.set(this.available_candies,id,true);
+        unlock_candy: function(id, price){
+            if(price < this.money){
+                this.money -= price;
+                Vue.set(this.available_candies,id,true);
+            }
         },
         refresh_dialog: function(){
             this.character.current_dialog = this.character.dialogs[this.character.current_dialog_type][this.character.current_dialog_index];
