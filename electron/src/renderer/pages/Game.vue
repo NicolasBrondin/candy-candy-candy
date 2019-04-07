@@ -7,9 +7,9 @@
         <UI :money="money" :bar_value="points" bar_version="classic"></UI>
         <Character v-if="character" :candies="character.expected_bag" :next_clicked="next_clicked" :position="character.position" :step="character.current_dialog" :is_talking="character.is_talking" :show_bag="show_bag" :sprite="character.sprite"></Character>
         <Candy type="1" :is_available="available_candies[1]" :on_unlock="unlock_candy" price="5" :is_active="game_step == 'candy'" :on_clicked="candy_clicked"></Candy>
-        <Candy type="2" :is_available="available_candies[2]" :on_unlock="unlock_candy" price="15" :is_active="game_step == 'candy'" :on_clicked="candy_clicked"></Candy>
-        <Candy type="3" :is_available="available_candies[3]" :on_unlock="unlock_candy" price="50" :is_active="game_step == 'candy'" :on_clicked="candy_clicked"></Candy>
-        <Candy type="4" :is_available="available_candies[4]" :on_unlock="unlock_candy" price="100" :is_active="game_step == 'candy'" :on_clicked="candy_clicked"></Candy>
+        <Candy type="2" v-show="!tuto" :is_available="available_candies[2]" :on_unlock="unlock_candy" price="15" :is_active="game_step == 'candy'" :on_clicked="candy_clicked"></Candy>
+        <Candy type="3" v-show="!tuto" :is_available="available_candies[3]" :on_unlock="unlock_candy" price="50" :is_active="game_step == 'candy'" :on_clicked="candy_clicked"></Candy>
+        <Candy type="4" v-show="!tuto" :is_available="available_candies[4]" :on_unlock="unlock_candy" price="100" :is_active="game_step == 'candy'" :on_clicked="candy_clicked"></Candy>
         <div class="stand"></div>
         <Bag :is_showing="bag_showing" :on_clicked="bag_clicked"></Bag>
     </div>
@@ -31,8 +31,9 @@
     components: { UI, Character, Candy, Bag , Popup},
     data: function(){
         return {
+            tuto: true,
             bag_showing : false,
-            money: 500,
+            money: 0,
             points: 0,
             game_step: "walking",
             available_candies: {1:true},
@@ -42,18 +43,22 @@
                 dialogs: {
                     start: [
                         {
-                            text: "Salut, je m'appelle Nick, Nick Tahmer !",
+                            text: "Tiens, tu fais des bonbons, toi ?",
                             button: "Suivant"
                         },
                         {
-                            text: "Je veux %candies%, et vite.",
+                            text: "Fais goûter %candies% voir ?",
                             action: "show_bag"
                         }
                     ],
                     end: [
                         {
-                            text: "Efficace, merci !",
-                            button: "A bientôt"
+                            text: "Hmmm, mais c'est vachement bon ! T'en as d'autres ?",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Continue, tu vas faire fortune mec !",
+                            button: "Suivant"
                         },
                         {
                             text: "",
@@ -62,12 +67,12 @@
                     ],
                     bad: [
                         {
-                            text: "J'ai pas commandé ça, voleur !!",
+                            text: "Allez steuplait !",
                             button: "Suivant"
                         },
                         {
                             text: "",
-                            action: "finish_character"
+                            action: "reload_bag"
                         }
 					]
                 },
@@ -84,13 +89,25 @@
                 dialogs: {
                     start: [
                         {
-                            text: "Je veux %candies%.",
+                            text: "Oh, quel charmant petit stand ! Qu'est-ce que tu vends mon petit ?",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Oh, des bonbons ! Tu les fais toi-même ?",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "C'est super ! Et bien ma foi je vais me laisser tenter !",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Et bien, je vais prendre %candies% s'il-te-plaît.",
                             action: "show_bag"
                         }
                     ],
                     end: [
                         {
-                            text: "Hmhmmh super, merci !",
+                            text: "Merci beaucoup mon petit, et bon courage !",
                             button: "Suivant"
                         },
                         {
@@ -100,7 +117,7 @@
                     ],
                     bad: [
                         {
-                            text: "Hmhmhm sale fils de mhhmhm !",
+                            text: "Oh, mais ce n'est pas ce que j'avais demandé !",
                             button: "Suivant"
                         },
                         {
@@ -108,10 +125,25 @@
                             action: "finish_character"
                         }
 					],
+                    empty: [
+                        {
+                            text: "Oh, tu es en rupture de stocks ? Ce n'est pas grave, je retenterai ma chance une autre fois !",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "finish_character"
+                        }
+                    ],
 					wait: [
 						{
-							text: "J'en ai marre d'attendre, je me casse !"
-						}
+							text: "Eh bien ?",
+                            button: "Suivant"
+						},
+                        {
+                            text: "",
+                            action: "reload_bag"
+                        }
 					]
                 },
                 money: 10,
@@ -128,13 +160,21 @@
                     start: [
 
                         {
-                            text: "Je veux %candies%.",
+                            text: "Bonjour mon garçon ! Comment te portes-tu ?",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Tes bonbons étaient très bons, tu as du talent ! Je vais en reprendre !",
+                            button: "Suivant"
+                        },
+                        {
+                            text: " Et bien, je vais prendre %candies% s'il-te-plaît.",
                             action: "show_bag"
                         }
                     ],
                     end: [
                         {
-                            text: "Hmhmmh super, merci !",
+                            text: "Merci mon garçon, bonne journée !",
                             button: "Suivant"
                         },
                         {
@@ -144,7 +184,7 @@
                     ],
                     bad: [
                         {
-                            text: "Hmhmhm sale fils de mhhmhm !",
+                            text: "Mais, ce n'était pas ma commande !",
                             button: "Suivant"
                         },
                         {
@@ -154,8 +194,82 @@
 					],
 					wait: [
 						{
-							text: "J'en ai marre d'attendre, je me casse !"
-						}
+							text: "Que se passe-t-il ?",
+                            button: "Suivant"
+						},
+                        {
+                            text: "",
+                            action: "reload_bag"
+                        }
+					],
+					empty: [
+						{
+							text: "Plus de bonbons ? Ce sont des choses qui arrivent, tant pis ! ",
+                            button: "Suivant"
+						},
+                        {
+                            text: "",
+                            action: "finish_character"
+                        }
+					]
+                },
+                money: 10,
+                points: 20,
+                position: "start",
+                is_talking: false,
+                current_dialog: {},
+                current_dialog_index: 0,
+                current_dialog_type: "start"
+            },
+            {
+                sprite:  SpriteCharacter1,
+                dialogs: {
+                    start: [
+                        {
+                            text: "Salut, comment ça va ? J'ai vu que tu avais eu d'autres clients !",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Hmm, ce bonbon est bon, mais on risque de vite se lasser si tu n'en as qu'un ! ",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Tu devrais essayer d'en faire d'autres !",
+                            action: "finish_tuto",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Oh, j'ai hâte de goûter ça!",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "finish_character"
+                        }
+                    ],
+                    end: [
+                        {
+                            text: "Hmmm, mais c'est vachement bon ! T'en as d'autres ?",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Continue, tu vas faire fortune mec !",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "finish_character"
+                        }
+                    ],
+                    bad: [
+                        {
+                            text: "Allez steuplait !",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "reload_bag"
+                        }
 					]
                 },
                 money: 10,
@@ -167,8 +281,8 @@
                 current_dialog_type: "start"
             }]},
             character: null,
-            character_index: 0,
-            day_index: 0,
+            character_index: 1,
+            day_index: 1,
 			wait_timer : null
         };
     },
@@ -180,6 +294,9 @@
         }.bind(this), 2000);
     },
     methods: {
+        finish_tuto: function(){
+            this.tuto = false;
+        },
         generate_bag: function(){
             let bag = {};
             bag[1] = Math.floor((Math.random()*3)+1);
@@ -223,6 +340,15 @@
 				}*/
 			}.bind(this), 2500);
         },
+        reload_bag: function(){
+            this.character.current_dialog_type = "start";
+            let bag_dialog = this.character.dialogs.start.forEach(function(d, index){
+                if(d.action == "show_bag") {
+                    this.character.current_dialog_index = index;
+                }
+            }.bind(this));
+			this.refresh_dialog();
+        },
       show_bag: function(){
           setTimeout(function(){
           	this.bag_showing = true;
@@ -233,17 +359,10 @@
 					  this.character.current_dialog_type = "wait";
 					  this.character.current_dialog_index = 0;
 					  this.refresh_dialog();
-						/*if(this.character.current_dialog.text != ""){
-							let speaking_sound = new Audio("static/speaking.mp3");
-							speaking_sound.play();
-						}*/
 						this.bag_showing = false;
-						setTimeout(function(){
-							this.finish_character();
-						}.bind(this),2000);
 				  }
 			  }.bind(this), 20000);
-            }.bind(this),2000);
+            }.bind(this),1500);
       },
       candy_clicked: function(type){
 		  	let candy_sound = new Audio("static/candy.mp3");
@@ -271,9 +390,17 @@
       bag_clicked: function(){
 		  this.game_step = "dialog";
 		  clearTimeout(this.wait_timer);
-		  console.log(JSON.stringify(this.character.expected_bag));
-		  console.log(JSON.stringify(this.current_bag));
-          if(JSON.stringify(this.character.expected_bag) == JSON.stringify(this.current_bag)){
+          if(this.character.dialogs.empty &&
+          this.current_bag[1] == 0 &&
+          this.current_bag[2] == 0 &&
+          this.current_bag[3] == 0 &&
+          this.current_bag[4] == 0 ){
+              alert("coucou");
+                this.character.current_dialog_type = "empty";
+			    this.character.current_dialog_index = 0;
+
+                this.refresh_dialog();
+          } else if(JSON.stringify(this.character.expected_bag) == JSON.stringify(this.current_bag)){
             this.money += this.character.money;
             this.points += this.character.points;
             this.character.current_dialog_type = "end";
@@ -289,9 +416,6 @@
 			wrong_sound.play();
             this.refresh_dialog();
 		  }
-		  if(this.character.current_dialog.text != ""){
-
-				}
           this.bag_showing = false;
 
       },

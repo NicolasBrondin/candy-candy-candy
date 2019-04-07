@@ -1,7 +1,7 @@
 <template>
     <button class="candy" :class="{'animated': animated, 'is-active': is_active, 'is-available': is_available, 'type-1': type == '1', 'type-2': type == '2', 'type-3': type == '3', 'type-4': type == '4'}" @click="clicked">
         <div class="shadow-candy"></div>
-        <span v-show="!is_available">{{price}}</span>
+        <span v-show="!is_available">{{price}}$</span>
     </button>
 </template>
 

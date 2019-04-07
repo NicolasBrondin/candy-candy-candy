@@ -89,21 +89,21 @@ import path from 'path';
     .character-container {
         position: absolute;
         bottom: 50px;
-        left: calc(50% - 200px);
-        height: 400px;
-        width: 400px;
+        left: calc(50% - 250px);
+        height: 500px;
+        width: 500px;
         transition-property: left;
         transition-timing-function: linear;
     }
 
 
     .character-container.start {
-        left: calc(0% - 400px);
+        left: calc(0% - 500px);
         transition-duration: 0s;
     }
 
     .character-container.middle {
-        left: calc(50% - 200px);
+        left: calc(50% - 250px);
         transition-duration: 2s;
     }
 
@@ -129,8 +129,8 @@ import path from 'path';
         background: white;
         width: 300px;
         height: 125px;
-        top: -150px;
-        right: -100px;
+        top: -50px;
+        right: -50px;
         border-radius: 25px;
         box-sizing: border-box;
         padding: 20px;
