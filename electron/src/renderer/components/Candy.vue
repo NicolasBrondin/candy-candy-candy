@@ -9,7 +9,8 @@
   export default {
     data () {
         return {
-            animated: false
+            animated: false,
+            anti_spammer: false
         }
     },
     mounted: function(){
@@ -17,7 +18,9 @@
     },
     methods: {
         clicked: function(){
-            if(this.is_active && this.is_available){
+            if(!this.anti_spammer && this.is_active && this.is_available){
+                this.anti_spammer = true;
+                setTimeout(function(){this.anti_spammer = false;}.bind(this),500);
                 this.animated = true;
                 setTimeout(function(){this.animated = false;}.bind(this),500);
                 this.on_clicked(this.type);

@@ -17,8 +17,8 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "le-meilleur-coin",
-    "appId": "com.brondin.nicolas.lemeilleurcoin",
+    "productName": "candy-candy-candy",
+    "appId": "com.brondin.nicolas.candycandycandy",
     "directories": {
       "output": "build"
     },
@@ -52,7 +52,6 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "leboncoin-api": "0.0.35",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",

@@ -1,11 +1,8 @@
 <template>
     <div>
-		<audio autoplay loop>
-			<source src="static/background.mp3" type="audio/mpeg">
-		</audio>
         <Popup :day="day_index" :money="money"></Popup>
         <UI :money="money" :bar_value="points" bar_version="classic"></UI>
-        <Character v-if="character" :candies="character.expected_bag" :next_clicked="next_clicked" :position="character.position" :step="character.current_dialog" :is_talking="character.is_talking" :show_bag="show_bag" :sprite="character.sprite"></Character>
+        <Character v-if="character" :money="money" :candies="character.expected_bag" :next_clicked="next_clicked" :position="character.position" :step="character.current_dialog" :is_fear="character.current_dialog.state == 'fear'" :is_angry="character.current_dialog.state == 'angry'" :is_talking="character.is_talking" :show_bag="show_bag" :sprite="character.sprite"></Character>
         <Candy type="1" :is_available="available_candies[1]" :on_unlock="unlock_candy" price="5" :is_active="game_step == 'candy'" :on_clicked="candy_clicked"></Candy>
         <Candy type="2" v-show="!tuto" :is_available="available_candies[2]" :on_unlock="unlock_candy" price="15" :is_active="game_step == 'candy'" :on_clicked="candy_clicked"></Candy>
         <Candy type="3" v-show="!tuto" :is_available="available_candies[3]" :on_unlock="unlock_candy" price="50" :is_active="game_step == 'candy'" :on_clicked="candy_clicked"></Candy>
@@ -23,9 +20,20 @@
   import Bag from '../components/Bag'
   import Candy from '../components/Candy'
 
-  import SpriteCharacter1 from "../assets/img/character-1.png"
-  import SpriteCharacter2 from "../assets/img/character-2.png"
-  import SpriteCharacter3 from "../assets/img/character-3.png"
+  import SpriteCharacter1 from "../assets/img/character-1-idle.png"
+  import SpriteCharacter1_angry from "../assets/img/character-1-angry.png"
+  import SpriteCharacter1_drug from "../assets/img/character-1-drug.png"
+  import SpriteCharacter1_fear from "../assets/img/character-1-fear.png"
+  import SpriteCharacter2 from "../assets/img/character-2-idle.png"
+  import SpriteCharacter2_angry from "../assets/img/character-2-angry.png"
+  import SpriteCharacter2_drug from "../assets/img/character-2-drug.png"
+  import SpriteCharacter2_sad from "../assets/img/character-2-sad.png"
+  import SpriteCharacter2_angry_cementery from "../assets/img/character-2-angry-cementery.png"
+  import SpriteCharacter3 from "../assets/img/character-3-idle.png"
+  import SpriteCharacter3_angry from "../assets/img/character-3-angry.png"
+  import SpriteCharacter3_drug from "../assets/img/character-3-drug.png"
+  import SpriteCharacter4 from "../assets/img/character-4-idle.png"
+  import SpriteCharacter4_excited from "../assets/img/character-4-happy.png"
 
   export default {
     name: 'landing-page',
@@ -38,24 +46,33 @@
             points: 0,
             game_step: "walking",
             available_candies: {1:true},
+            character: null,
+            character_index: 0,
+            day_index: 0,
+            wait_timer : null,
+            background_music: null,
             characters: {
                 1: [{
                 sprite:  SpriteCharacter1,
                 dialogs: {
                     start: [
                         {
-                            text: "Tiens, tu fais des bonbons, toi ?",
-                            button: "Suivant"
+                            text: "Tiens, tu vends des bonbons, toi ?",
+                            button: "Suivant",
+                            action: "load_music",
+                            action_data: "background"
                         },
                         {
                             text: "Fais goûter %candies% pour voir ?",
-                            action: "show_bag"
+                            action: "show_bag",
+                            sprite: SpriteCharacter1
                         }
                     ],
                     end: [
                         {
-                            text: "Hmmm, mais c'est vachement bon ! T'en as d'autres ?",
-                            button: "Suivant"
+                            text: "Mais c'est vachement bon ! T'en as d'autres ?",
+                            button: "Suivant",
+                            sprite: SpriteCharacter1_drug
                         },
                         {
                             text: "Continue, tu vas faire fortune mec !",
@@ -69,7 +86,8 @@
                     bad: [
                         {
                             text: "Je voulais pas ça !",
-                            button: "Suivant"
+                            button: "Suivant",
+                            sprite: SpriteCharacter3_angry
                         },
                         {
                             text: "",
@@ -129,7 +147,8 @@
                     end: [
                         {
                             text: "Merci beaucoup mon petit, ça a égayé ma journée !",
-                            button: "Suivant"
+                            button: "Suivant",
+                            sprite: SpriteCharacter2_drug
                         },
                         {
                             text: "",
@@ -179,7 +198,6 @@
                 sprite:  SpriteCharacter2,
                 dialogs: {
                     start: [
-
                         {
                             text: "Bonjour mon garçon ! Comment te portes-tu ?",
                             button: "Suivant"
@@ -195,8 +213,9 @@
                     ],
                     end: [
                         {
-                            text: "Ah enfin ! A très bientôt !",
-                            button: "Suivant"
+                            text: "Ah enfin ! À très bientôt !",
+                            button: "Suivant",
+                            sprite: SpriteCharacter2_drug
                         },
                         {
                             text: "",
@@ -264,22 +283,15 @@
                             button: "Suivant"
                         },
                         {
-                            text: "J'ai hâte de goûter ça!",
-                            button: "Suivant"
-                        },
-                        {
-                            text: "",
-                            action: "finish_character"
+                            text: "Tu pourrais me donner %candies% pour la route ?",
+                            action: "show_bag"
                         }
                     ],
                     end: [
                         {
-                            text: "Hmmm, mais c'est vachement bon ! T'en as d'autres ?",
-                            button: "Suivant"
-                        },
-                        {
-                            text: "Continue, tu vas faire fortune mec !",
-                            button: "Suivant"
+                            text: "Merci à plus !",
+                            button: "Suivant",
+                            sprite: SpriteCharacter1_drug
                         },
                         {
                             text: "",
@@ -288,7 +300,7 @@
                     ],
                     bad: [
                         {
-                            text: "Allez steuplait !",
+                            text: "Heureusement que je délivre mieux les conseils que toi les bonbons ! ",
                             button: "Suivant"
                         },
                         {
@@ -321,7 +333,8 @@
                     end: [
                         {
                             text: "Merci mon petit, j'aimerais que mes futurs enfants soient aussi gentils que toi !",
-                            button: "Suivant"
+                            button: "Suivant",
+                            sprite: SpriteCharacter3_drug
                         },
                         {
                             text: "",
@@ -368,7 +381,8 @@
                     end: [
                         {
                             text: "C'est mon mari qui va être content !",
-                            button: "Suivant"
+                            button: "Suivant",
+                            sprite: SpriteCharacter3_drug
                         },
                         {
                             text: "",
@@ -406,7 +420,7 @@
                         }
 					]
                 },
-                money: 10,
+                money: 11,
                 points: 20,
                 position: "start",
                 is_talking: false,
@@ -420,15 +434,17 @@
                     start: [
                         {
                             text: "Salut gamin, je ne sais pas ce que tu mets dans tes bonbons...",
-                            button: "Suivant"
+                            button: "Suivant",
+                            sprite: SpriteCharacter2_drug
                         },
                         {
                             text: "...mais ça me fait plus d'effet que mes satanés médicaments !",
                             button: "Suivant"
                         },
                         {
-                            text: "Tu seras gentil de me donner %candies%, je faiblis",
-                            action: "show_bag"
+                            text: "Tu seras gentil de me donner %candies%, je faiblis.",
+                            action: "show_bag",
+                            sprite: SpriteCharacter2_drug
                         }
                     ],
                     end: [
@@ -447,8 +463,9 @@
                     ],
                     bad: [
                         {
-                            text: "Ne joue pas avec ma santé",
-                            button: "Suivant"
+                            text: "Ne joue pas avec ma santé.",
+                            button: "Suivant",
+                            sprite: SpriteCharacter2_angry
                         },
                         {
                             text: "",
@@ -458,7 +475,8 @@
                     empty: [
                         {
                             text: "Mais enfin c'est grotesque ! Vilain petit personnage !",
-                            button: "Suivant"
+                            button: "Suivant",
+                            sprite: SpriteCharacter2_angry
                         },
                         {
                             text: "Pour la peine j'irai me fournir ailleurs !",
@@ -470,7 +488,7 @@
                         }
 					]
                 },
-                money: 10,
+                money: 12,
                 points: 20,
                 position: "start",
                 is_talking: false,
@@ -504,14 +522,15 @@
                             button: "Suivant"
                         },
                         {
-                            text: "Pour fêter ça j'adorerais %candies%",
+                            text: "Pour fêter ça j'adorerais %candies%.",
                             action: "show_bag"
                         }
                     ],
                     end: [
                         {
-                            text: "Mmmh j'en deviendrais presque accrocs...",
-                            button: "Suivant"
+                            text: "Mmmh j'en deviendrais presque accroc...",
+                            button: "Suivant",
+                            sprite: SpriteCharacter3_drug
                         },
                         {
                             text: "",
@@ -521,7 +540,8 @@
                     bad: [
                         {
                             text: "Si c'est une blague, je ne la trouve pas drôle...",
-                            button: "Suivant"
+                            button: "Suivant",
+                            sprite: SpriteCharacter3_angry
                         },
                         {
                             text: "",
@@ -531,7 +551,8 @@
                     empty: [
                         {
                             text: "Si c'est une blague, je ne la trouve pas drôle...",
-                            button: "Suivant"
+                            button: "Suivant",
+                            sprite: SpriteCharacter3_angry
                         },
                         {
                             text: "",
@@ -539,46 +560,598 @@
                         }
 					]
                 },
-                money: 10,
+                money: 15,
                 points: 20,
                 position: "start",
                 is_talking: false,
                 current_dialog: {},
                 current_dialog_index: 0,
                 current_dialog_type: "start"
-            }]},
-            character: null,
-            character_index: 0,
-            day_index: 0,
-			wait_timer : null
+            },
+            {
+                sprite:  SpriteCharacter4,
+                dialogs: {
+                    start: [
+                        {
+                            text: "Hum salut. Il parait que...",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "...tu vends, tu sais, des petits...",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "...\"bonbons\", enfin tu sais, tu vois de quoi je parle.",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Il me faudrait %candies%, mais dépêche-toi.",
+                            action: "show_bag"
+                        }
+                    ],
+                    end: [
+                        {
+                            text: "Merci, et fais quand même gaffe, il y a des gens chelous dans le coin...",
+                            sprite: SpriteCharacter4_excited,
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "finish_character"
+                        }
+                    ],
+                    bad: [
+                        {
+                            text: "T'es sérieux !? T'aimes pas la vie ?",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "T'as de la chance que je puisse pas rester.",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "finish_character"
+                        }
+					],
+                    wait: [
+                        {
+                            text: "Merde ils arrivent !",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "finish_character"
+                        }
+					]
+                },
+                money: 30,
+                points: 20,
+                position: "start",
+                is_talking: false,
+                current_dialog: {},
+                current_dialog_index: 0,
+                current_dialog_type: "start"
+            },
+            {
+                sprite:  SpriteCharacter1,
+                dialogs: {
+                    start: [
+                        {
+                            text: "Psst, j'ai décidé de monter un business de revente de sucre, t'en es ?",
+                            button: "Suivant",
+                            sprite: SpriteCharacter1_drug
+                        },
+                        {
+                            text: "Tu veux pas t'associer ?",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Sérieux penses-y !",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Je fournis, tu coupes et tu vends, ce serait incroyable.",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Hugo qui est en 5ème pense qu'on peut se faire...",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "...pas mal d'argent de poche !",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Okay, tant pis, je le ferai tout seul !",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "finish_character"
+                        }
+                    ]
+                },
+                money: 0,
+                points: 20,
+                position: "start",
+                is_talking: false,
+                current_dialog: {},
+                current_dialog_index: 0,
+                current_dialog_type: "start"
+            }
+            ],
+            5: [
+                {
+                sprite:  SpriteCharacter1,
+                dialogs: {
+                    start: [
+                        {
+                            text: "Mec, je suis mal...",
+                            button: "Suivant",
+                            action: "load_music",
+                            action_data: "background-sad",
+                            sprite: SpriteCharacter1_fear,
+                            state: "fear"
+                        },
+                        {
+                            text: "Je crois que je me suis associé avec les mauvaises personnes...",
+                            button: "Suivant",
+                            state: "fear"
+                        },
+                        {
+                            text: "Ils m'ont tout pris !!",
+                            button: "Suivant",
+                            state: "fear"
+                        },
+                        {
+                            text: "J'ai besoin de ton aide, tu pourrais pas me donner quelques bonbons pour me refaire ?",
+                            button: "Suivant",
+                            state: "fear"
+                        },
+                        {
+                            text: "Juste %candies% ça devrait suffire !",
+                            action: "show_bag",
+                            state: "fear"
+                        }
+                    ],
+                    bad: [
+                        {
+                            text: "Bon je vais essayer de faire en sorte de survivre avec ça...",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "finish_character"
+                        }
+                    ],
+                    end: [
+                        {
+                            text: "Merci, toi t'es un vrai pote !",
+                            button: "Suivant",
+                            sprite: SpriteCharacter1
+                        },
+                        {
+                            text: "Je vais me refaire et je vais leur montrer qui c'est le patron !",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "finish_character"
+                        }
+                    ]
+                },
+                money: 0,
+                points: 20,
+                position: "start",
+                is_talking: false,
+                current_dialog: {},
+                current_dialog_index: 0,
+                current_dialog_type: "start"
+            }],
+            6:[
+            {
+                sprite:  SpriteCharacter4,
+                dialogs: {
+                    start: [
+                        {
+                            text: "Hey... Salut.. Je voulais te dire...",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Désolé pour hier, j'étais un peu à cran tu vois.",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Ça devient vraiment n'importe quoi ici...",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "...ce matin y'a même un gamin qui s'est fait buter...",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "... parce qu'il revendait du sucre dans la rue, DU SUCRE BORDEL !!!",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Il devait avoir ton âge à peu près... C'est trop triste.",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Bon j'y vais, je veux pas rester dans le coin. Salut.",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "finish_character"
+                        }
+                    ],
+                    end: [
+
+                    ],
+                    bad: [
+
+					],
+                    empty: [
+
+					]
+                },
+                money: 0,
+                points: 20,
+                position: "start",
+                is_talking: false,
+                current_dialog: {},
+                current_dialog_index: 0,
+                current_dialog_type: "start"
+            },
+            {
+                sprite:  SpriteCharacter2,
+                dialogs: {
+                    start: [
+                        {
+                            text: "Écoute petit, je sais que cela fait longtemps que je ne suis pas venue...",
+                            button: "Suivant",
+                            sprite: SpriteCharacter2_sad
+                        },
+                        {
+                            text: "J'ai voulu essayer d'acheter mes bonbons dans une autre boutique mais...",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "...je n'en ai trouvé aucun qui soit aussi bon.",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Et aujourd'hui j'ai besoin d'un remontant parce que...",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "...mon mari est décédé il y a trois jours, et l'enterrement est aujourd'hui.",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Je devrais y être en ce moment, mais je ne peux pas surmonter ça toute seule.",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Donne moi vite %candies% sinon je vais le manquer !",
+                            action: "show_bag"
+                        }
+                    ],
+                    end: [
+                        {
+                            text: "Merci...",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "finish_character"
+                        }
+                    ],
+                    bad: [
+                        {
+                            text: "...",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "finish_character"
+                        }
+					],
+                    empty: [
+                        {
+                            text: "JE NE PARTIRAI PAS SANS CES BONBONS !!!!!",
+                            button: "Suivant",
+                            sprite: SpriteCharacter2_angry_cementery,
+                            state: "angry"
+                        },
+                        {
+                            text: "",
+                            action: "reload_bag"
+                        }
+					]
+                },
+                money: 50,
+                points: 20,
+                position: "start",
+                is_talking: false,
+                current_dialog: {},
+                current_dialog_index: 0,
+                current_dialog_type: "start"
+            },
+            {
+                sprite:  SpriteCharacter2,
+                dialogs: {
+                    start: [
+                        {
+                            text: "...",
+                            button: "Suivant",
+                            sprite: SpriteCharacter2_sad
+                        },
+                        {
+                            text: "J'en veux encore...",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Donne-moi %candies%.",
+                            action: "show_bag"
+                        }
+                    ],
+                    end: [
+                        {
+                            text: "Merci...",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "finish_character"
+                        }
+                    ],
+                    bad: [
+                        {
+                            text: "...",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "finish_character"
+                        }
+					],
+                    empty: [
+                        {
+                            text: "JE NE PARTIRAI PAS SANS CES BONBONS !!!!!",
+                            button: "Suivant",
+                            sprite: SpriteCharacter2_angry_cementery,
+                            state: "angry"
+                        },
+                        {
+                            text: "",
+                            action: "reload_bag"
+                        }
+					]
+                },
+                money: 75,
+                points: 20,
+                position: "start",
+                is_talking: false,
+                current_dialog: {},
+                current_dialog_index: 0,
+                current_dialog_type: "start"
+            },
+            {
+                sprite:  SpriteCharacter2,
+                dialogs: {
+                    start: [
+                        {
+                            text: "À ton avis combien faut-il manger de bonbons pour en mourir ?",
+                            button: "Oui",
+                            sprite: SpriteCharacter2_sad
+                        },
+                        {
+                            text: "Ah oui ? %candies%, alors donne-moi ça que j'en finisse.",
+                            action: "show_bag"
+                        }
+                    ],
+                    end: [
+                        {
+                            text: "Adieu...",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "finish_character"
+                        }
+                    ],
+                    bad: [
+                        {
+                            text: "Adieu...",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "finish_character"
+                        }
+					],
+                    empty: [
+                        {
+                            text: "JE NE PARTIRAI PAS SANS CES BONBONS !!!!!",
+                            button: "Suivant",
+                            sprite: SpriteCharacter2_angry_cementery,
+                            state: "angry"
+                        },
+                        {
+                            text: "",
+                            action: "reload_bag"
+                        }
+					]
+                },
+                money: 100,
+                points: 20,
+                position: "start",
+                is_talking: false,
+                current_dialog: {},
+                current_dialog_index: 0,
+                current_dialog_type: "start"
+            }
+            ],
+            7: [
+                {
+                sprite:  SpriteCharacter4,
+                dialogs: {
+                    start: [
+                        {
+                            text: "Petit. Je vais te poser une question. Et UNE SEULE.",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Est-ce que c'est TOI qui vendais toutes ces MERDES à ma femme ?",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Ne fais pas comme si tu ne la CONNAISSAIS PAS !",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Elle a les cheveux très LONGS, BRUNS, et adore les ENFANTS...",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "TON SILENCE EN DIT LONG !",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Et bien sache qu'à cause de TOI, et de tes bonbons IGNOBLES...",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Ma femme a développé du diabète de type 2 et vient de perdre notre bébé...",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "NOTRE BÉBÉ !",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "NOTRE VIE A ÉTÉ GÂCHÉE PAR TA FAUTE !!",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "J'ESPÈRE QUE ÇA TE HANTERA TOUTE... TA.. VIE.",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Tu es un monstre.",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "finish_character"
+                        }
+                    ],
+                    end: [
+
+                    ],
+                    bad: [
+
+					],
+                    empty: [
+
+					]
+                },
+                money: 0,
+                points: 20,
+                position: "start",
+                is_talking: false,
+                current_dialog: {},
+                current_dialog_index: 0,
+                current_dialog_type: "start"
+            }],
+            8: [
+                {
+                sprite:  "",
+                dialogs: {
+                    start: [
+                        {
+                            text: "...",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Tiens, il n'y a plus personne",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Joli score, tu as réussi à amasser la modique somme de %money%$...",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "...et tu as seulement ruiné 4 vies...",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Bravo."
+                        }
+                    ],
+                    end: [
+
+                    ],
+                    bad: [
+
+					],
+                    empty: [
+
+					]
+                },
+                money: 0,
+                points: 20,
+                position: "start",
+                is_talking: false,
+                current_dialog: {},
+                current_dialog_index: 0,
+                current_dialog_type: "start"
+            }
+            ]}
         };
     },
     mounted: function(){
-        this.day_index = 1;
+        this.day_index = 5;
         setTimeout(function(){
             setTimeout(function(){this.points = 10}.bind(this),1000);
             this.load_character();
         }.bind(this), 2000);
     },
     methods: {
+        load_music: function(name){
+            if(this.background_music){
+                this.background_music.pause();
+                this.background_music.src = null;
+                this.background_music = null
+            }
+            this.background_music = new Audio("static/"+name+".mp3");
+            this.background_music.loop = true;
+            this.background_music.play();
+        },
+        load_sprite: function(s){
+            this.character.sprite = s;
+        },
         finish_tuto: function(){
             this.tuto = false;
         },
         generate_bag: function(){
             let bag = {};
-            bag[1] = Math.floor((Math.random()*2*this.day_index)+1);
+            bag[1] = Math.floor((Math.random()*1.5*this.day_index)+1);
             if(this.available_candies[2]){
-                bag[2] = Math.floor((Math.random()*2*this.day_index)+1);
+                bag[2] = Math.floor((Math.random()*1.5*this.day_index)+1);
             } else {
                 bag[2] = 0;
             }
             if(this.available_candies[3]){
-            bag[3] = Math.floor((Math.random()*2*this.day_index)+1);
+            bag[3] = Math.floor((Math.random()*1.5*this.day_index)+1);
             } else {
                 bag[3] = 0;
             }
             if(this.available_candies[4]){
-            bag[4] = Math.floor((Math.random()*2*this.day_index)+1);
+            bag[4] = Math.floor((Math.random()*1.5*this.day_index)+1);
             } else {
                 bag[4] = 0;
             }
@@ -695,7 +1268,7 @@
 			}*/
         },
         unlock_candy: function(id, price){
-            if(price < this.money){
+            if(price <= this.money){
                 let money_sound = new Audio("static/money.mp3");
 			    money_sound.play();
                 this.money -= price;
@@ -707,6 +1280,9 @@
             if(this.character.current_dialog.action){
                 this[this.character.current_dialog.action](this.character.current_dialog.action_data);
 			}
+            if(this.character.current_dialog.sprite){
+                this.character.sprite = this.character.current_dialog.sprite;
+            }
 
         }
     }

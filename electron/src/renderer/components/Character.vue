@@ -1,5 +1,5 @@
 <template>
-    <div class="character-container" :class="{'talking': is_talking, 'start': position == 'start', 'middle': position == 'middle', 'finish': position == 'finish'}">
+    <div class="character-container" :class="{'talking': is_talking, 'angry': is_angry, 'fear': is_fear, 'start': position == 'start', 'middle': position == 'middle', 'finish': position == 'finish'}">
         <div class="character-sprite" :style="'background-image: url('+sprite+');'"></div>
         <div class="character-bubble">
             {{displayed_text}}
@@ -46,7 +46,8 @@ import path from 'path';
                   if(n>-1){
                       candies_sentence = candies_sentence.substring(0, n) + " et "+candies_sentence.substring(n+2, candies_sentence.length);
                   }
-                  this.refactored_text = this.step.text.replace("%candies%", candies_sentence);
+                  this.refactored_text = this.step.text.replace("%candies%", candies_sentence).replace("%money%",this.money);
+
                   this.letter_index = 0;
 				    this.speaking_sound.play();
                   this.text_timer = setInterval(function(){
@@ -68,7 +69,7 @@ import path from 'path';
                  this.refresh_text(this.is_talking);
           }
       },
-    props: ["position", "is_talking", "step", "sprite", "show_bag", "next_clicked", "candies"]
+    props: ["position", "is_talking", "step", "sprite", "show_bag", "next_clicked", "candies", "money", "is_fear", "is_angry"]
   }
 </script>
 
@@ -84,6 +85,20 @@ import path from 'path';
         0% { transform: translateY(-10px)}
         50% { transform: translateY(0px)}
         100% { transform: translateY(-10px)}
+    }
+
+    @keyframes angry {
+        0% { transform: translate(-7.5px,-3.5px)}
+        25% { transform: translate(0px,0px)}
+        50% { transform: translate(7.5px, -3.5px)}
+        75% { transform: translate(0px, 0px)}
+        100% { transform: translate(-7.5px, -3.5px)}
+    }
+
+    @keyframes fear {
+        0% {transform: translate(1.5px) rotate(2.25deg);}
+        50% {transform: translate(-1.5px)  rotate(0deg);}
+        100% {transform: translate(1.5px) rotate(2.25deg);}
     }
 
     .character-container {
@@ -139,7 +154,7 @@ import path from 'path';
 
     }
 
-    .character-container.talking .character-bubble {
+    .character-container.talking:not(.fear):not(.angry) .character-bubble {
          animation-duration: 2s;
         animation-name: idle;
     }
@@ -155,9 +170,26 @@ import path from 'path';
          animation-duration: 2s;
         animation-name: idle;
     }
+
+    .character-container.talking.fear .character-sprite {
+         animation-duration: 0.3s;
+         animation-iteration-count: infinite;
+        animation-name: fear;
+
+        //animation-timing-function: ease-in-out;
+    }
+
+    .character-container.talking.angry .character-sprite {
+         animation-duration: 0.5s;
+        animation-name: angry;
+         animation-iteration-count: infinite;
+         animation-fill-mode: both;
+        animation-timing-function: ease-out;
+    }
+
     .character-container:not(.talking) .character-sprite {
 
-        animation-duration: 0.5s;
+        animation-duration: 0.7s;
         animation-name: walking;
     }
 
