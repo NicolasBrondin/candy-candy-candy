@@ -17,46 +17,58 @@ import path from 'path';
       data: function(){
           return {
             text_timer: null,
+            refactored_text: "",
             displayed_text: "",
             letter_index:0,
+            candy_names: {
+                1: ["bonbon jaune", "bonbons jaunes"],
+                2: ["croco vert", "crocos verts"],
+                3: ["dragée rouge", "dragées rouges"],
+                4: ["bouteille de coca", "bouteilles de coca"]
+            },
             speaking_sound: new Audio("static/speaking.mp3")
           };
       },
-      watch: {
-          is_talking: function(val){
+      methods: {
+          refresh_text: function(val){
               if(val == true){
                   this.displayed_text = "";
+                  let candies_sentence = Object.keys(this.candies).reduce(function(str, candy_key){
+                      if(this.candies[candy_key] > 0){
+                          if(str != "") {
+                              str +=", ";
+                          }
+                          str += this.candies[candy_key]+ " "+ (this.candies[candy_key] == 1 ? this.candy_names[candy_key][0] : this.candy_names[candy_key][1]);
+                      }
+                      return str;
+                  }.bind(this),"");
+                  let n = candies_sentence.lastIndexOf(", ");
+                  if(n>-1){
+                      candies_sentence = candies_sentence.substring(0, n) + " et "+candies_sentence.substring(n+2, candies_sentence.length);
+                  }
+                  this.refactored_text = this.step.text.replace("%candies%", candies_sentence);
                   this.letter_index = 0;
 				    this.speaking_sound.play();
                   this.text_timer = setInterval(function(){
                       this.letter_index++;
-                      this.displayed_text = this.step.text.substr(0,this.letter_index);
-                      if(this.displayed_text === this.step.text){
+                      this.displayed_text = this.refactored_text.substr(0,this.letter_index);
+                      if(this.displayed_text === this.refactored_text){
                           this.speaking_sound.pause();
                           clearInterval(this.text_timer);
                       }
                   }.bind(this),15);
               }
+        }
+      },
+      watch: {
+          is_talking: function(val){
+              this.refresh_text(val);
           },
           step: function(val){
-              if(this.is_talking){
-                  this.displayed_text = "";
-                  this.letter_index = 0;
-					this.speaking_sound.play();
-                  this.text_timer = setInterval(function(){
-                      this.letter_index++;
-                      this.displayed_text = this.step.text.substr(0,this.letter_index);
-                      if(this.displayed_text === this.step.text){
-
-                         this.speaking_sound.pause();
-                         this.speaking_sound.currentTime = 0;
-                          clearInterval(this.text_timer);
-                      }
-                  }.bind(this),15);
-              }
+                 this.refresh_text(this.is_talking);
           }
       },
-    props: ["position", "is_talking", "step", "sprite", "show_bag", "next_clicked"]
+    props: ["position", "is_talking", "step", "sprite", "show_bag", "next_clicked", "candies"]
   }
 </script>
 

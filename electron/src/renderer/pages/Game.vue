@@ -5,7 +5,7 @@
 		</audio>
         <Popup :day="day_index" :money="money"></Popup>
         <UI :money="money" :bar_value="points" bar_version="classic"></UI>
-        <Character v-if="character" :next_clicked="next_clicked" :position="character.position" :step="character.current_dialog" :is_talking="character.is_talking" :show_bag="show_bag" :sprite="character.sprite"></Character>
+        <Character v-if="character" :candies="character.expected_bag" :next_clicked="next_clicked" :position="character.position" :step="character.current_dialog" :is_talking="character.is_talking" :show_bag="show_bag" :sprite="character.sprite"></Character>
         <Candy type="1" :is_available="available_candies[1]" :on_unlock="unlock_candy" price="5" :is_active="game_step == 'candy'" :on_clicked="candy_clicked"></Candy>
         <Candy type="2" :is_available="available_candies[2]" :on_unlock="unlock_candy" price="15" :is_active="game_step == 'candy'" :on_clicked="candy_clicked"></Candy>
         <Candy type="3" :is_available="available_candies[3]" :on_unlock="unlock_candy" price="50" :is_active="game_step == 'candy'" :on_clicked="candy_clicked"></Candy>
@@ -46,7 +46,7 @@
                             button: "Suivant"
                         },
                         {
-                            text: "Je veux DEUX bonbons rouges, et vite.",
+                            text: "Je veux %candies%, et vite.",
                             action: "show_bag"
                         }
                     ],
@@ -73,8 +73,6 @@
                 },
                 money: 10,
                 points: 20,
-                expected_bag: {1:2,2:0,3:0},
-                current_bag: {1:0,2:0,3:0},
                 position: "start",
                 is_talking: false,
                 current_dialog: {},
@@ -86,17 +84,7 @@
                 dialogs: {
                     start: [
                         {
-                            text: "Hey, j'ai trouvé un bonbon par terre !",
-                            button: "Récupérer le bonbon"
-                        },
-                        {
-                            text: "Le voilà ",
-                            action: "unlock_candy",
-                            action_data: "2",
-                            button: "Suivant"
-                        },
-                        {
-                            text: "Je veux mhmmh bonbons oranges",
+                            text: "Je veux %candies%.",
                             action: "show_bag"
                         }
                     ],
@@ -128,8 +116,6 @@
                 },
                 money: 10,
                 points: 20,
-                expected_bag: {1:0,2:1,3:0},
-                current_bag: {1:0,2:0,3:0},
                 position: "start",
                 is_talking: false,
                 current_dialog: {},
@@ -140,18 +126,9 @@
                 sprite:  SpriteCharacter2,
                 dialogs: {
                     start: [
+
                         {
-                            text: "Hey, j'ai trouvé un bonbon par terre !",
-                            button: "Récupérer le bonbon"
-                        },
-                        {
-                            text: "Le voilà ",
-                            action: "unlock_candy",
-                            action_data: "2",
-                            button: "Suivant"
-                        },
-                        {
-                            text: "Je veux mhmmh bonbons oranges",
+                            text: "Je veux %candies%.",
                             action: "show_bag"
                         }
                     ],
@@ -183,8 +160,6 @@
                 },
                 money: 10,
                 points: 20,
-                expected_bag: {1:0,2:1,3:0},
-                current_bag: {1:0,2:0,3:0},
                 position: "start",
                 is_talking: false,
                 current_dialog: {},
@@ -205,8 +180,31 @@
         }.bind(this), 2000);
     },
     methods: {
+        generate_bag: function(){
+            let bag = {};
+            bag[1] = Math.floor((Math.random()*3)+1);
+            if(this.available_candies[2]){
+                bag[2] = Math.floor((Math.random()*3)+1);
+            } else {
+                bag[2] = 0;
+            }
+            if(this.available_candies[3]){
+            bag[3] = Math.floor((Math.random()*3)+1);
+            } else {
+                bag[3] = 0;
+            }
+            if(this.available_candies[4]){
+            bag[4] = Math.floor((Math.random()*3)+1);
+            } else {
+                bag[4] = 0;
+            }
+            Vue.set(this.character,"expected_bag",bag);
+            console.log(this.character.expected_bag);
+        },
         load_character: function(){
+            this.current_bag = {1:0,2:0,3:0,4:0};
 			this.character = this.characters[this.day_index][this.character_index];
+            this.generate_bag();
             this.character.is_talking = false;
 			this.character.position = "start";
 			let walking_sound = new Audio("static/walking.mp3");
@@ -244,13 +242,13 @@
 							this.finish_character();
 						}.bind(this),2000);
 				  }
-			  }.bind(this), 10000);
+			  }.bind(this), 20000);
             }.bind(this),2000);
       },
       candy_clicked: function(type){
 		  	let candy_sound = new Audio("static/candy.mp3");
 			candy_sound.play();
-          	this.character.current_bag[type]++;
+          	this.current_bag[type]++;
       },
       finish_character: function(){
 
@@ -274,8 +272,8 @@
 		  this.game_step = "dialog";
 		  clearTimeout(this.wait_timer);
 		  console.log(JSON.stringify(this.character.expected_bag));
-		  console.log(JSON.stringify(this.character.current_bag));
-          if(JSON.stringify(this.character.expected_bag) == JSON.stringify(this.character.current_bag)){
+		  console.log(JSON.stringify(this.current_bag));
+          if(JSON.stringify(this.character.expected_bag) == JSON.stringify(this.current_bag)){
             this.money += this.character.money;
             this.points += this.character.points;
             this.character.current_dialog_type = "end";
