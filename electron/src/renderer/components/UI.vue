@@ -9,6 +9,8 @@
 
                 </div>
             </div>
+            <img src="../assets/img/smiley.png" class="smiley" v-show="bar_value<50"/>
+            <img src="../assets/img/smiley-2.png" class="smiley" v-show="bar_value>=50"/>
         </div>
     </div>
 </template>
@@ -34,9 +36,9 @@
     .money {
         position: absolute;
         top: 25px;
-        left: 300px;
+        right: 260px;
         color: white;
-        font-size: 42px;
+        font-size: 60px;
         text-shadow: 0px 0px 10px black;
         font-family: Gloria Hallelujah;
     }
@@ -44,7 +46,7 @@
     .bar-container {
         position: absolute;
         left: 300px;
-        top: 100px;
+        top: 25px;
         transform: rotate(180deg);
     }
 
@@ -65,7 +67,16 @@
     }
 
     .bar-container.classic .inner-bar {
-        background: #ee25ec;
+        background: #51b553;
+    }
+
+    .smiley {
+        transform: rotate(180deg);
+    width: 30px;
+    position: absolute;
+    top: 11px;
+    left: 6px;
+
     }
 
 </style>

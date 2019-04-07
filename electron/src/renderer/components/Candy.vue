@@ -138,7 +138,7 @@
         animation-timing-function: linear;
     }
 
-    .candy.is-active:hover {
+    .candy.is-active:hover, .candy:not(.is-available):not(.is-active):hover {
         opacity: 1;
         cursor: pointer;
         transform: scale(1.1);
