@@ -167,7 +167,7 @@
 					],
                     empty: [
                         {
-                            text: "Oh, tu es en rupture de stocks ? Ce n'est pas grave, je retenterai ma chance une autre fois !",
+                            text: "Tu es en rupture de stocks ? Ce n'est pas grave, je reviendrai une autre fois !",
                             button: "Suivant"
                         },
                         {
@@ -465,7 +465,8 @@
                         {
                             text: "Ne joue pas avec ma santé.",
                             button: "Suivant",
-                            sprite: SpriteCharacter2_angry
+                            sprite: SpriteCharacter2_angry,
+                            state: "angry"
                         },
                         {
                             text: "",
@@ -476,11 +477,13 @@
                         {
                             text: "Mais enfin c'est grotesque ! Vilain petit personnage !",
                             button: "Suivant",
-                            sprite: SpriteCharacter2_angry
+                            sprite: SpriteCharacter2_angry,
+                            state: "angry"
                         },
                         {
                             text: "Pour la peine j'irai me fournir ailleurs !",
-                            button: "Suivant"
+                            button: "Suivant",
+                            state: "angry"
                         },
                         {
                             text: "",
@@ -523,7 +526,8 @@
                         },
                         {
                             text: "Pour fêter ça j'adorerais %candies%.",
-                            action: "show_bag"
+                            action: "show_bag",
+                            sprite: SpriteCharacter3
                         }
                     ],
                     end: [
@@ -705,7 +709,7 @@
                             state: "fear"
                         },
                         {
-                            text: "J'ai besoin de ton aide, tu pourrais pas me donner quelques bonbons pour me refaire ?",
+                            text: "J'ai besoin de ton aide, tu peux pas me filer quelques bonbons pour me refaire ?",
                             button: "Suivant",
                             state: "fear"
                         },
@@ -827,11 +831,11 @@
                             button: "Suivant"
                         },
                         {
-                            text: "...mon mari est décédé il y a trois jours, et l'enterrement est aujourd'hui.",
+                            text: "...mon mari est mort il y a trois jours, l'enterrement est aujourd'hui.",
                             button: "Suivant"
                         },
                         {
-                            text: "Je devrais y être en ce moment, mais je ne peux pas surmonter ça toute seule.",
+                            text: "Je devrais y être en ce moment, mais je ne peux pas surmonter ça seule.",
                             button: "Suivant"
                         },
                         {
@@ -842,7 +846,8 @@
                     end: [
                         {
                             text: "Merci...",
-                            button: "Suivant"
+                            button: "Suivant",
+                            sprite: SpriteCharacter2_sad
                         },
                         {
                             text: "",
@@ -901,7 +906,8 @@
                     end: [
                         {
                             text: "Merci...",
-                            button: "Suivant"
+                            button: "Suivant",
+                            sprite: SpriteCharacter2_sad
                         },
                         {
                             text: "",
@@ -956,7 +962,8 @@
                     end: [
                         {
                             text: "Adieu...",
-                            button: "Suivant"
+                            button: "Suivant",
+                            sprite: SpriteCharacter2_sad
                         },
                         {
                             text: "",
@@ -966,7 +973,8 @@
                     bad: [
                         {
                             text: "Adieu...",
-                            button: "Suivant"
+                            button: "Suivant",
+                            sprite: SpriteCharacter2_sad
                         },
                         {
                             text: "",
@@ -1077,7 +1085,7 @@
                             button: "Suivant"
                         },
                         {
-                            text: "Tiens, il n'y a plus personne",
+                            text: "Tiens, il n'y a plus personne.",
                             button: "Suivant"
                         },
                         {
@@ -1114,7 +1122,7 @@
         };
     },
     mounted: function(){
-        this.day_index = 5;
+        this.day_index = 6;
         setTimeout(function(){
             setTimeout(function(){this.points = 10}.bind(this),1000);
             this.load_character();
