@@ -33,7 +33,9 @@
   import SpriteCharacter3_angry from "../assets/img/character-3-angry.png"
   import SpriteCharacter3_drug from "../assets/img/character-3-drug.png"
   import SpriteCharacter4 from "../assets/img/character-4-idle.png"
-  import SpriteCharacter4_excited from "../assets/img/character-4-happy.png"
+  import SpriteCharacter4_drug from "../assets/img/character-4-drug.png"
+  import SpriteCharacter4_angry from "../assets/img/character-4-angry.png"
+  import SpriteCharacter4_very_angry from "../assets/img/character-4-very-angry.png"
 
   export default {
     name: 'landing-page',
@@ -596,7 +598,7 @@
                     end: [
                         {
                             text: "Merci, et fais quand même gaffe, il y a des gens chelous dans le coin...",
-                            sprite: SpriteCharacter4_excited,
+                            sprite: SpriteCharacter4_drug,
                             button: "Suivant"
                         },
                         {
@@ -607,10 +609,13 @@
                     bad: [
                         {
                             text: "T'es sérieux !? T'aimes pas la vie ?",
+                            sprite: SpriteCharacter4_angry,
+                            state: "angry",
                             button: "Suivant"
                         },
                         {
                             text: "T'as de la chance que je puisse pas rester.",
+                            state: "angry",
                             button: "Suivant"
                         },
                         {
@@ -621,6 +626,8 @@
                     wait: [
                         {
                             text: "Merde ils arrivent !",
+                            sprite: SpriteCharacter4_angry,
+                            state: "angry",
                             button: "Suivant"
                         },
                         {
@@ -1010,46 +1017,59 @@
                     start: [
                         {
                             text: "Petit. Je vais te poser une question. Et UNE SEULE.",
+                            sprite: SpriteCharacter4_angry,
+                            state: "angry",
                             button: "Suivant"
                         },
                         {
                             text: "Est-ce que c'est TOI qui vendais toutes ces MERDES à ma femme ?",
+                            state: "angry",
                             button: "Suivant"
                         },
                         {
                             text: "Ne fais pas comme si tu ne la CONNAISSAIS PAS !",
+                            state: "angry",
                             button: "Suivant"
                         },
                         {
                             text: "Elle a les cheveux très LONGS, BRUNS, et adore les ENFANTS...",
+                            state: "angry",
                             button: "Suivant"
                         },
                         {
                             text: "TON SILENCE EN DIT LONG !",
+                            sprite: SpriteCharacter4_very_angry,
+                            state: "angry",
                             button: "Suivant"
                         },
                         {
                             text: "Et bien sache qu'à cause de TOI, et de tes bonbons IGNOBLES...",
+                            state: "angry",
                             button: "Suivant"
                         },
                         {
                             text: "Ma femme a développé du diabète de type 2 et vient de perdre notre bébé...",
+                            state: "angry",
                             button: "Suivant"
                         },
                         {
                             text: "NOTRE BÉBÉ !",
+                            state: "angry",
                             button: "Suivant"
                         },
                         {
                             text: "NOTRE VIE A ÉTÉ GÂCHÉE PAR TA FAUTE !!",
+                            state: "angry",
                             button: "Suivant"
                         },
                         {
                             text: "J'ESPÈRE QUE ÇA TE HANTERA TOUTE... TA.. VIE.",
+                            state: "angry",
                             button: "Suivant"
                         },
                         {
                             text: "Tu es un monstre.",
+                            state: "angry",
                             button: "Suivant"
                         },
                         {
@@ -1093,7 +1113,7 @@
                             button: "Suivant"
                         },
                         {
-                            text: "...et tu as seulement ruiné 4 vies...",
+                            text: "...et tu as seulement ruiné la vie de 4 personnes...",
                             button: "Suivant"
                         },
                         {
@@ -1122,7 +1142,7 @@
         };
     },
     mounted: function(){
-        this.day_index = 6;
+        this.day_index = 1;
         setTimeout(function(){
             setTimeout(function(){this.points = 10}.bind(this),1000);
             this.load_character();
