@@ -7,7 +7,12 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'landing-page',
+      name: 'menu',
+      component: require('@/pages/Menu').default
+    },
+    {
+      path: '/game',
+      name: 'game',
       component: require('@/pages/Game').default
     },
     {
