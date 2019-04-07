@@ -36,6 +36,7 @@
   import SpriteCharacter4_drug from "../assets/img/character-4-drug.png"
   import SpriteCharacter4_angry from "../assets/img/character-4-angry.png"
   import SpriteCharacter4_very_angry from "../assets/img/character-4-very-angry.png"
+  import SpriteCharacter5 from "../assets/img/character-5-idle.png"
 
   export default {
     name: 'landing-page',
@@ -195,13 +196,83 @@
                 current_dialog: {},
                 current_dialog_index: 0,
                 current_dialog_type: "start"
+            },
+            {
+                sprite:  SpriteCharacter5,
+                dialogs: {
+                    start: [
+                        {
+                            text: "Bonjour mon garçon ! Alors, tu vends des bonbons ?",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Ils les aiment tes amis ? J'adorerais les gouter.",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Donne-moi %candies%, ça a l'air délicieux...",
+                            action: "show_bag"
+                        }
+                    ],
+                    end: [
+                        {
+                            text: "Tu es un bon garçon, j'espère qu'on se reverra",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "finish_character"
+                        }
+                    ],
+                    bad: [
+                        {
+                            text: "Oh ce n'est pas grave mon mignon, je ferais avec !",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "finish_character"
+                        }
+					],
+                    empty: [
+                        {
+                            text: "Oh tu n'as plus de bonbon, quel dommage...",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "Ce n'est pas grave, je reviendrai une prochaine fois !",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "finish_character"
+                        }
+                    ],
+					wait: [
+						{
+							text: "Prends bien ton temps",
+                            button: "Suivant"
+						},
+                        {
+                            text: "",
+                            action: "reload_bag"
+                        }
+					]
+                },
+                money: 10,
+                points: 20,
+                position: "start",
+                is_talking: false,
+                current_dialog: {},
+                current_dialog_index: 0,
+                current_dialog_type: "start"
             }],
             2: [{
                 sprite:  SpriteCharacter2,
                 dialogs: {
                     start: [
                         {
-                            text: "Bonjour mon garçon ! Comment te portes-tu ?",
+                            text: "Bonjour mon lapin ! Comment te portes-tu ?",
                             button: "Suivant"
                         },
                         {
@@ -637,6 +708,76 @@
 					]
                 },
                 money: 30,
+                points: 20,
+                position: "start",
+                is_talking: false,
+                current_dialog: {},
+                current_dialog_index: 0,
+                current_dialog_type: "start"
+            },
+            {
+                sprite:  SpriteCharacter5,
+                dialogs: {
+                    start: [
+                        {
+                            text: "Ah-ah je savais bien qu'on se reverrait !",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "J'ai beaucoup entendu parler de tes bonbons...",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "...depuis notre dernière rencontre.",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "On m'a dit que %candies% c'était parfait pour les enfants, j'en veux.",
+                            action: "show_bag"
+                        }
+                    ],
+                    end: [
+                        {
+                            text: "Je suis sûr qu'ils les adoreront...",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "finish_character"
+                        }
+                    ],
+                    bad: [
+                        {
+                            text: "Tu es gentil mais ce n'est pas ce que je t'avais demandé.",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "reload_bag"
+                        }
+					],
+                    empty: [
+                        {
+                            text: "Je crois que j'en ai vu un pourtant !",
+                            button: "Suivant"
+                        },
+                        {
+                            text: "",
+                            action: "reload_bag"
+                        }
+                    ],
+					wait: [
+						{
+							text: "Prends bien ton temps",
+                            button: "Suivant"
+						},
+                        {
+                            text: "",
+                            action: "reload_bag"
+                        }
+					]
+                },
+                money: 10,
                 points: 20,
                 position: "start",
                 is_talking: false,
