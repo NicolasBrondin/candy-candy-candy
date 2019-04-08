@@ -1,6 +1,24 @@
-# le-meilleur-coin
+# candy-candy-candy
 
-> An electron-vue project
+> La vie c'est comme une boite de bonbons, on ne sait jamais sur quoi on va tomber...
+
+![Screenshot](https://img.itch.zone/aW1hZ2UvNDAyNjg2LzE5OTg1MzMucG5n/original/aWurOn.png)
+
+## Description
+
+Vous pensez que vendre des bonbons c'est mignon ? Il se peut que vous changiez d'avis.
+
+Candy-Candy-Candy est un jeu très simple en apparence, mais qui tire sa force de ses personnages hauts en couleurs et ses dialogues décalés.
+
+Réalisé par une équipe de trois personnes lors la GameJam Hitbox Makers 2019 à Tours, le jeu a reçu d'excellente critique par les joueurs qui ont pu y jouer,  vous laisserez-vous embarquer dans l'aventure de la vente de bonbon comme lorsque vous étiez enfant ? 
+
+Le thème de la compétition était "Reverse", alors dites-nous en commentaire si vous avez été "renversé" !
+
+## Download
+
+Le jeu est disponible en téléchargement pour Windows et Mac sur la plateforme itch.io [ici](https://nicolas-brondin-bernard.itch.io/candy-candy-candy) !
+
+## Developers
 
 #### Build Setup
 

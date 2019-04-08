@@ -2,7 +2,7 @@
   "name": "candy-candy-candy",
   "version": "0.0.1",
   "author": "NicolasBrondin <nicolas@brondin.com>",
-  "description": "An electron-vue project",
+  "description": "Un jeu développé en 48h lors de la GameJam Hitbox Makers",
   "license": null,
   "main": "./dist/electron/main.js",
   "scripts": {
