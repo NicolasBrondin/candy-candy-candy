@@ -3,11 +3,34 @@
     <router-link to="/game"><img src="../assets/img/candy-3.png" height="200"/></router-link>
     <h2>Candy Candy Candy</h2>
     <h1>Cliquez sur le bonbon pour lancer le jeu</h1>
+    <div>
+        <button @click="set_lang('fr')">FR</button>
+        <button @click="set_lang('en')">EN</button>
+    </div>
     <div class="stand"></div>
     </div>
 </template>
+
 <script>
 
+    import store from '../store/index.js'
+
+    export default {
+        computed: {
+            lang: function(){
+                return store.state.Config.lang;
+            }
+        },
+        mounted: function(){
+            store.dispatch("set_lang",{key: 'fr'});
+            console.log(this.lang);
+        },
+        methods: {
+            set_lang: function(key){
+                store.dispatch("set_lang",{key: key});
+            }
+        }
+    }
 </script>
 
 <style>

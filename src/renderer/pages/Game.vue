@@ -13,18 +13,27 @@
 </template>
 
 <script>
+
+
   import Vue from 'vue'
+    import store from '../store/index.js'
   import Popup from '../components/Popup'
   import UI from '../components/UI'
   import Character from '../components/Character'
   import Bag from '../components/Bag'
   import Candy from '../components/Candy'
 
-  import characters_fr from "../data/en.js"
+  import characters_en from "../data/en.js"
+  import characters_fr from "../data/fr.js"
 
   export default {
     name: 'landing-page',
     components: { UI, Character, Candy, Bag , Popup},
+    computed: {
+        lang: function(){
+            return store.state.Config.lang;
+        }
+    },
     data: function(){
         return {
             tuto: true,
@@ -38,11 +47,17 @@
             day_index: 0,
             wait_timer : null,
             background_music: null,
-            characters: characters_fr
+            characters: null
         };
     },
     mounted: function(){
         this.day_index = 1;
+        console.log(this.lang);
+        if(this.lang === "fr"){
+            this.characters = characters_fr;
+        } else {
+            this.characters = characters_en;
+        }
         setTimeout(function(){
             setTimeout(function(){this.points = 10}.bind(this),1000);
             this.load_character();
